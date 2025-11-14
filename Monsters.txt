@@ -1,0 +1,7 @@
+MS1|RM3|Security Zombie|Low-level zombie that contains the key to the mansion.|100|10|Mansion Key / Security Vest|Boss
+MS2|RM2,RM4,RM5,RM6,RM11,RM12|Zombie|Low-level zombie that spawns randomly in packs of 1–3.|50|5|⅕ Syringe  ⅓ Badge|Random Encounter 50%
+MS3|RM7,RM8,RM9,RM10,RM14,RM16,RM18,RM19|Servant Zombie|Mid-level zombie, tougher and faster.|75|20|⅓ Bandage  ⅙ Syringe|Random Encounter 50%
+MS4|RM13|Chef Zombie|High-level zombie proficient with knives.|100|30|½ Bandage  ⅓ Syringe|Boss
+MS5|RM17|Zombie Child|Agile zombie that attacks twice per turn.|75|25|½ Bandage  ⅓ Syringe|Boss
+MS6|RM21|Carnivore Plant Zombie|Zombified Venus flytrap that ensnares victims.|300|50|Back Gate Key / Swat Gear|Boss
+MS7|RM23|Big Bob|Massive blob of flesh and spores, spewing black goo.|400|100|Null|Final Boss
