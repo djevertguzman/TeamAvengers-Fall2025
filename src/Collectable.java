@@ -1,17 +1,25 @@
+import java.util.ArrayList;
 public class Collectable extends Item {
 
     private String collSet;
 
-    public Collectable(int itmID, String itmName, String itmType, String itmDescription,
-                       int augDmg, int augHP, int itmHP, boolean isConsumable,
-                       String collSet) {
-
-        super(itmID, itmName, itmType, itmDescription, augDmg, augHP, itmHP, isConsumable);
-        this.collSet = collSet;
+    public Collectable(int id, String name, String desc, String setName) {
+        super(id, name, "Collectible", desc, 0, 0, 0, false);
+        this.collSet = setName;
     }
 
-    public boolean checkSetCompl() {
-        // Stub: depends on collection logic
-        return false;
+    public boolean checkSetCompl(ArrayList<Item> invList) {
+        int count = 0;
+        for (Item i : invList) {
+            if (i instanceof Collectable) {
+                Collectable c = (Collectable) i;
+                if (c.collSet.equals(this.collSet)) {
+                    count++;
+                }
+            }
+        }
+        // Doll Set requires 3 pieces: Head, Torso, Limbs
+        return count >= 3;
     }
 }
+

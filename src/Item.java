@@ -1,13 +1,16 @@
 
+
 public class Item {
 
     private int itmID;
     private String itmName;
     private String itmType;
     private String itmDescription;
-    private int augDmg;
+
+    // Stats
+    int augDmg;
     private int augHP;
-    private int itmHP;
+    int itmHP;
     private boolean isConsumable;
 
     // Constructor
@@ -17,17 +20,17 @@ public class Item {
         this.itmName = itmName;
         this.itmType = itmType;
         this.itmDescription = itmDescription;
+
         this.augDmg = augDmg;
         this.augHP = augHP;
         this.itmHP = itmHP;
+
         this.isConsumable = isConsumable;
     }
 
-    // ---- Getters ----
     public String getName() {
         return itmName;
     }
-
     public String getDescription() {
         return itmDescription;
     }
@@ -35,17 +38,17 @@ public class Item {
     public String getType() {
         return itmType;
     }
-
-    // ---- Methods ----
-    // Damages or reduces HP of the item
-    public void dmgItem(int dmg) {
-        itmHP -= dmg;
-        if (itmHP < 0) itmHP = 0;
+    public int getAugDmg() {
+        return augDmg;
     }
-
-    @Override
-    public String toString() {
-        return itmName + " (" + itmType + "): " + itmDescription;
+    public int getAugHP() {
+        return augHP;
+    }
+    public int getItemHp() {
+        return itmHP;
+    }
+    public boolean isConsumable() {
+        return isConsumable;
     }
 }
 

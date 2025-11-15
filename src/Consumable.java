@@ -1,20 +1,30 @@
+
+
 public class Consumable extends Item {
 
     private boolean stackable;
-    private String consumeGrp;
+    private String consumeGroup;   // "Heal", "Buff", etc.
 
-    public Consumable(int itmID, String itmName, String itmType, String itmDescription,
-                      int augDmg, int augHP, int itmHP, boolean isConsumable,
-                      boolean stackable, String consumeGrp) {
+    public Consumable(int id, String name, String desc, int healAmount,
+                      boolean stackable, String consumeGroup) {
 
-        super(itmID, itmName, itmType, itmDescription, augDmg, augHP, itmHP, isConsumable);
+        super(id, name, "Consumable", desc, 0, 0, healAmount, true);
         this.stackable = stackable;
-        this.consumeGrp = consumeGrp;
+        this.consumeGroup = consumeGroup;
     }
 
-    public void consume() {
-        // Example effect logic
-        itmHP = 0;  // or apply augHP, etc.
+    public int consume() {
+
+         return itmHP;// healing or effect amount
+    }
+
+    public boolean isStackable() {
+        return stackable;
+    }
+
+    public String getConsumeGroup() {
+        return consumeGroup;
     }
 }
+
 

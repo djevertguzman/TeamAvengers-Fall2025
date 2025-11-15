@@ -1,20 +1,23 @@
 public class Equipment extends Item {
 
-    private int itmArmor;
+    private int armorValue;
 
-    public Equipment(int itmID, String itmName, String itmType, String itmDescription,
-                     int augDmg, int augHP, int itmHP, boolean isConsumable,
-                     int itmArmor) {
-
-        super(itmID, itmName, itmType, itmDescription, augDmg, augHP, itmHP, isConsumable);
-        this.itmArmor = itmArmor;
+    public Equipment(int id, String name, String desc, int armor, int hpBonus) {
+        super(id, name, "Equipment", desc, 0, hpBonus, 0, false);
+        this.armorValue = armor;
     }
 
-    public void equip() {
+    public int getArmorValue() {
+        return armorValue;
     }
 
-    public void unequip() {
+    public int equip() {
+        return armorValue;
+    }
 
+    public int unequip() {
+        return armorValue;
     }
 }
+
 
