@@ -1,4 +1,3 @@
-
 import java.util.Scanner;
 
 public class Controller {
@@ -22,7 +21,7 @@ public class Controller {
 			PuzzleSet(usrString);
 		}
 	}
-	public static void MainMenuSet(String usrInput) {
+	private static void MainMenuSet(String usrInput) {
 		switch(usrInput) {
 		case "start":
 		    //Game.startGame();
@@ -48,7 +47,7 @@ public class Controller {
 			return;
 		}
 	}
-	public static void NavigationSet(String usrInput) {
+	private static void NavigationSet(String usrInput) {
 		//int nbrRoom[] = Game.getNeighbouringRooms();
 		usrInput = usrInput.toLowerCase();
 		String commandSplit[] = usrInput.split(" ");
@@ -178,7 +177,7 @@ public class Controller {
 			break;
 		}
 	}
-	public static void CombatSet(String usrInput) {
+	private static void CombatSet(String usrInput) {
 		usrInput = usrInput.toLowerCase();
 		String commandSplit[] = usrInput.split(" ");
 		switch(commandSplit[0]){
@@ -198,7 +197,7 @@ public class Controller {
 			break;
 		}
 	}
-	public static void CombatFightSet(String usrInput) {
+	private static void CombatFightSet(String usrInput) {
 		usrInput = usrInput.toLowerCase();
 		String commandSplit[] = usrInput.split(" ");
 		switch(commandSplit[0]){
@@ -218,7 +217,7 @@ public class Controller {
 			break;
 		}
 	}
-	public static void PuzzleSet(String usrInput) {
+	private static void PuzzleSet(String usrInput) {
 		usrInput = usrInput.toLowerCase();
 		String commandSplit[] = usrInput.split(" ");
 		switch(commandSplit[0]){
@@ -229,7 +228,7 @@ public class Controller {
 			System.out.println("Make sure to select an option.");
 			break;
 		default:
-			//Heres where well be handling the user answer.
+			//Heres where we'll be handling the user answer.
 			//This may need modification due to the arbitrary nature of this 
 			//function.
 			//System.out.println("There is nowhere to go, select another option.");

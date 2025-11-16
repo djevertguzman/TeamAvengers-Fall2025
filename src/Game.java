@@ -1,7 +1,4 @@
-	import java.util.ArrayList;
-	import Controller;
-	import View;
-	import newView;
+import java.util.ArrayList;
 
 	import java.util.Iterator;
 	//Main game logic will go here.
@@ -30,6 +27,7 @@
 			return;
 		}
 		public static void saveGame() {
+			//not Implemented
 			
 		}
 		private static void playGame() {
@@ -46,10 +44,10 @@
 					//String usrCommand = View.navigationCLI(Player.currPlayerLocation(),Area.get(Player.currPlayerLocation()).getRoomName(), Area.get(Player.currPlayerLocation()).hasVisited(),Area.get(Player.currPlayerLocation()).description);
 					//Controller.parseUSRInput(usrCommand);
 					skipFight = false;
-					newView.setView(1);
-					newView.draw();
-					Controller.singleStepParse(1);
-					Area.get(Player.currPlayerLocation()).visit();
+					View.switchView(1);
+					View.draw();
+					Controller.parseUSRInput();
+					//Area.get(Player.currPlayerLocation()).visit();
 				}
 			}
 		public static ArrayList<Room> getRoomList(){

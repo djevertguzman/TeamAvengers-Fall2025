@@ -13,28 +13,28 @@ public class View {
 	}
 	public static void draw() {
 		switch(currView) {
-		case 1:
+		case 0:
 			drawMainMenu();
 			return;
-		case 2:
+		case 1:
 			drawNavigation();
 			return;
-		case 3:
+		case 2:
 			drawInventory();
 			return;
-		case 4:
+		case 3:
 			drawStats();
 			return;
-		case 5:
+		case 4:
 			drawPuzzle();
 			return;
-		case 6:
+		case 5:
 			drawMap();
 			return;
-		case 7:
+		case 6:
 			drawCombat();
 			return;
-		case 8:
+		case 7:
 			drawFight();
 			return;
 		default:
@@ -42,43 +42,49 @@ public class View {
 			return;
 		}
 	}
-	public static void drawMainMenu() {
+	private static void drawMainMenu() {
 		System.out.println("---------Main Menu----------");
+		System.out.println("1. Start New Game [start]");
+		System.out.println("2. Load Game [load]");
+		System.out.println("3. Exit [exit]");
+		System.out.println("4. Help [help]");
+		System.out.println("------------------------------------------------------------------------------------------");
+		System.out.print("Enter Selection []: ");
 		printMessage();
 		
 	}
-	public static void drawNavigation() {
+	private static void drawNavigation() {
 		System.out.println("---------Navigation----------");
 		printMessage();
 	}
-	public static void drawStats() {
+	private static void drawStats() {
 		System.out.println("---------Statistics----------");
 		printMessage();
 	}
-	public static void drawInventory() {
+	private static void drawInventory() {
 		System.out.println("---------Inventory----------");
 		printMessage();
 	}
-	public static void drawCombat() {
+	private static void drawCombat() {
 		System.out.println("---------Monsters!----------");
 		printMessage();
 	}
-	public static void drawFight() {
+	private static void drawFight() {
 		System.out.println("---------Fight!----------");
 		printMessage();
 	}
-	public static void drawPuzzle() {
+	private static void drawPuzzle() {
 		System.out.println("---------Quiz Time----------");
 		printMessage();
 	}
-	public static void drawMap() {
+	private static void drawMap() {
 		System.out.println("---------World Map----------");
 		printMessage();
 	}
-	public static void printMessage() {
+	private static void printMessage() {
 		if(!message.equals("")) {
 			System.out.println(message);
 			}
-			message = "";
+			clearMessage();
 	}
 }
