@@ -1,0 +1,23 @@
+RM1|Front Gate Courtyard|You stand before the towering iron gate, its bars blackened with rust and streaked with something darker. The lock is fused shut, a heavy chain coiled around it like a serpent. Even if you had the strength, the metal looks as though it has become part of the stone wall itself — immovable, unbreakable. When you press your hand against the cold iron, a vibration hums faintly, as though the gate is alive, or listening. The fog beyond swirls against the bars, thicker and darker than anywhere else, hiding whatever lies outside from sight. Scratched into the stone at eye level are the faint words: “No Return.”|N:RM2
+RM2|Empty Driveway|Weeds pierce through cracked stone, overtaking what was once a proud path for carriages. Abandoned tire marks vanish into the fog, as if swallowed whole.|N:RM5(l),E:RM4,W:RM3
+RM3|Fog-Covered Garden|Rows of dead roses jut from the soil like brittle bones. Statues stare from the haze, their faces eroded beyond recognition, watching your every move.|E:RM2
+RM4|Fountain Plaza|The fountain sputters weakly, water murky and dark. Something glimmers at the bottom… but the surface ripples as if disturbed from below.|W:RM2
+RM5|Main Entrance Hall|The grand chandelier sways ever so slightly, though the air is still. Torn banners hang from the balcony, and the silence here is deafening.|N:RM12,E:RM8,S:RM2(l),W:RM6
+RM6|Library|Towering shelves bend under the weight of ancient tomes. A ladder lies toppled, pages scattered like fallen leaves. A rancid, sweet smell lingers in the air.|N:RM11,E:RM5
+RM7|First Floor Bathroom|The cracked mirror reflects only a warped shadow of your face. The tub is filled with foul, stagnant water that drips onto the tiles with a steady rhythm.|N:RM13
+RM8|Stairwell|The wooden steps creak as if protesting your weight. Scratches run deep along the banister, far too wide to be human.|E:RM9,W:RM5
+RM9|Gallery Hallway|Dusty portraits line the walls, their eyes gouged out. A faint trail of crimson leads beneath one of the gilded frames.|N:RM15,E:RM10(l),W:RM8
+RM10|Master Bedroom|The four-poster bed is still made, sheets untouched yet riddled with dark stains. A music box sits on the dresser, playing on its own, though its key is broken.|W:RM9(l)
+RM11|Sunroom|Tall glass panes are fogged from the inside, smeared with handprints that fade into streaks. Plants sit withered in their pots, nothing but brittle husks twisting toward a dead sky.|N:RM19(l),S:RM6
+RM12|Dining Room|A massive oak table stretches across the room, scarred with deep scratches and dark stains. Faded, moth-eaten chairs lean at odd angles, as if abandoned mid-meal.|E:RM13,S:RM5
+RM13|Kitchen|The stench of rotted meat and blood-soaked rags suffocates the air. Knives remain embedded in the cutting block, their edges wet with something fresher than the rest.|S:RM7,W:RM12
+RM14|Second Floor Bathroom|The sink runs endlessly, water rust-colored and steaming. The mirror has been shattered from within, shards littering the floor in a perfect circle.|E:RM16,S:RM15
+RM15|Study Room|Stacks of journals and loose papers are strewn about, each filled with frantic handwriting. The last entry ends abruptly with a single crimson fingerprint.|N:RM14,E:RM17,S:RM9
+RM16|Servant’s Quarters|Narrow bunks line the damp stone walls. Chains hang from the ceiling, swaying gently, though the air is still.|S:RM18,W:RM14
+RM17|Children’s Playroom|Broken toys lie scattered across the rug, their porcelain faces cracked. A music box melody echoes faintly, though no source can be found.|W:RM15
+RM18|Balcony|The wooden railings are weak with rot, overlooking the sprawling fog below. Something stirs in the mist, circling… waiting.|N:RM16
+RM19|Overgrown Backyard|Twisted vines and thorned bushes fill the yard. The ground sinks underfoot as if breathing. A rusted swing sways slowly, though the air is still.|N:RM22(l),E:RM21,S:RM11(l),W:RM20
+RM20|Old Storage Shed|Tools hang rusted on the walls, many missing. The floor is littered with muddy footprints that stop suddenly in the center of the room.|E:RM19
+RM21|Greenhouse|Thick humidity chokes the air. Massive plants press against the glass walls, their roots creeping across the floor as if reaching for prey.|W:RM19
+RM22|Back Gate to the Woods|A rusted lock bars the way, but claw marks scar the metal. The gate rattles softly, though no wind blows.|N:RM23,S:RM19(l)
+RM23|Weeping Woods|The trees groan with every step, their twisted branches dripping with dew that resembles tears. Whispers linger between the trunks, growing louder the deeper you go.|S:RM22

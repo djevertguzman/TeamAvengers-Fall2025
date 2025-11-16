@@ -1,0 +1,18 @@
+IT1|Broken Pipe|Weapon|A rusted length of metal, bent and jagged at the edges. It hums faintly when held.|+25 DMG
+IT2|Pistol|Weapon|Cold steel, heavy in the hand. Scratched barrel from frequent use.|+50 DMG
+IT3|Shotgun|Weapon|Splintered stock, echoes loudly when fired.|+100 DMG
+IT4|Syringe|Consumable|Thick cloudy liquid promising relief—or oblivion.|+100 HP
+IT5|Bandage|Consumable|Frayed gauze stiffened with old blood.|+50 HP
+IT6|Swat Gear|Equipment|Heavy armor smelling of gunpowder and sweat.|+50 Armor  +25 HP
+IT7|Damp Trench Coat|Equipment|Soaked fabric clings to you, chilling the skin.|+5 Armor
+IT8|Security Vest|Equipment|Bulletproof, padded weight presses on your chest.|+20 Armor  +10 HP
+IT9|Master Bedroom Key|Key Item|Tarnished ornate key unlocking the Master Bedroom.|Unlock RM10
+IT10|Mansion Key|Key Item|Heavy, etched with unreadable symbols.|Unlock RM5
+IT11|Back Gate Key|Key Item|Rust-covered key smelling of earth and rot.|Unlock RM22
+IT12|Flashlight|Key Item|Weak beam sputters through darkness.|Allows Access RM23 Boss
+IT13|Rifle|Weapon|Long, heavy, trembling crosshairs; reeks of oil.|+75 DMG
+IT14|Doll Head|Collectible|Porcelain head with hollow cracked eyes.|Combine in RM20 for Mother’s Grief
+IT15|Doll Torso|Collectible|Child-sized torso stitched with black thread.|Combine in RM20 for Mother’s Grief
+IT16|Doll Limbs|Collectible|Set of arms & legs bundled together; faintly twitch.|Combine in RM20 for Mother’s Grief
+IT17|Mother’s Grief|Weapon|Cursed cleaver born from doll pieces, soaked in sorrow.|+200 DMG
+IT18|Backyard Key|Key Item|Rusted iron key smelling of soil and blood.|Unlock RM19
