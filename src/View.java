@@ -34,31 +34,51 @@ public class View {
 		case 7:
 			drawCombat();
 			return;
+		case 8:
+			drawFight();
+			return;
 		default:
 			System.out.println("Invalid View has been called.");
 			return;
 		}
 	}
 	public static void drawMainMenu() {
-		System.out.println("Main Menu UI");
+		System.out.println("---------Main Menu----------");
+		printMessage();
 		
 	}
 	public static void drawNavigation() {
-		System.out.println("Player Navigation UI");
+		System.out.println("---------Navigation----------");
+		printMessage();
 	}
 	public static void drawStats() {
-		System.out.println("Stats UI");
+		System.out.println("---------Statistics----------");
+		printMessage();
 	}
 	public static void drawInventory() {
-		System.out.println("Player Inventory UI");
+		System.out.println("---------Inventory----------");
+		printMessage();
 	}
 	public static void drawCombat() {
-		System.out.println("Combat UI");
+		System.out.println("---------Monsters!----------");
+		printMessage();
+	}
+	public static void drawFight() {
+		System.out.println("---------Fight!----------");
+		printMessage();
 	}
 	public static void drawPuzzle() {
-		System.out.println("Puzzle UI");
+		System.out.println("---------Quiz Time----------");
+		printMessage();
 	}
 	public static void drawMap() {
-		System.out.println("Map UI");
+		System.out.println("---------World Map----------");
+		printMessage();
+	}
+	public static void printMessage() {
+		if(!message.equals("")) {
+			System.out.println(message);
+			}
+			message = "";
 	}
 }

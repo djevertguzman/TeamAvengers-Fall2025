@@ -1,8 +1,5 @@
-import java.util.Scanner;
 
-import textGame.Game;
-import textGame.Player;
-import userInterface.View;
+import java.util.Scanner;
 
 public class Controller {
 	private static Scanner usrkey = new Scanner(System.in);
