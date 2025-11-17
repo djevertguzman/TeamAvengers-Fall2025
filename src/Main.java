@@ -381,8 +381,6 @@ public class Main {
             }
 
             file.close();
-            System.out.println("Rooms loaded.");
-
         } catch (Exception e) {
             System.out.println("ERROR loading rooms: " + e.getMessage());
         }
@@ -425,7 +423,6 @@ public class Main {
             }
 
             file.close();
-            System.out.println("Monsters loaded.");
         } catch (Exception e) {
             System.out.println("ERROR loading monsters: " + e.getMessage());
         }
@@ -456,7 +453,6 @@ public class Main {
             }
 
             file.close();
-            System.out.println("Puzzles loaded.");
         } catch (Exception e) {
             System.out.println("ERROR loading puzzles: " + e.getMessage());
         }
@@ -508,12 +504,6 @@ public class Main {
             }
 
             file.close();
-            System.out.println("Artifacts loaded.");
-            System.out.println("Loaded Artifacts:");
-            for (String key : artifacts.keySet()) {
-                System.out.println("[" + key + "]");
-            }
-
         } catch (Exception e) {
             System.out.println("ERROR loading artifacts: " + e.getMessage());
         }
