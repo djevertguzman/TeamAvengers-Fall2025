@@ -1,3 +1,4 @@
+//Tuan Nguyen
 public class Consumable extends Item {
 
     private boolean stackable;

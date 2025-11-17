@@ -1,111 +1,53 @@
+// Gabriel Peart & Evert Guzman
 import java.util.ArrayList;
 import java.util.Scanner;
 
+// The Player class extends Entity so it gets base HP and Attack stats
 public class Player extends Entity {
+
+    // --- Player Specific Fields ---
     private int armor;
     private Item equippedWeapon;
     private Item equippedArmor;
-    private Room currentRoom;
-    private ArrayList<Item> inventory;
+    private Room currentRoom; // Where the player is right now
+    private ArrayList<Item> inventory; // A list to hold all the loot
+    private String pendingPuzzleReward = null; // A temporary spot to hold a reward ID
 
+    // This is the constructor It runs when we make a new Player
     public Player(String name) {
-        super(name, 100, 25); // HP, Base Attack from Analysis doc
-        this.armor = 5;
-        this.inventory = new ArrayList<>();
+        super(name, 100, 25); // Calls the parent Entity constructor Base HP 100 Base Attack 25
+        this.armor = 5; // A little bit of base protection
+        this.inventory = new ArrayList<>(); // Gotta start with an empty bag
     }
 
-    // Location
+    // -----------------------------
+    // LOCATION & MOVEMENT METHODS
+    // These handle where the player is in the world
+    // -----------------------------
+
+    // Setter for the current Room
     public void setCurrentRoom(Room room) {
         this.currentRoom = room;
     }
+    // Getter for the current Room
     public Room getCurrentRoom() {
         return currentRoom;
     }
 
-    // Stats
-    public int getArmor() {
-        return armor;
-    }
-    public void setArmor(int armor) {
-        this.armor = armor;
-    }
-
-    // Equipment
-    public void equipWeapon(Item weapon) {
-        if (weapon != null && weapon.getType().equalsIgnoreCase("Weapon")) {
-            this.equippedWeapon = weapon;
-            System.out.println("You equipped: " + weapon.getName());
-        }
-    }
-
-    public void equipArmor(Item armorItem) {
-        if (armorItem != null && armorItem.getType().equalsIgnoreCase("Equipment")) {
-            this.equippedArmor = armorItem;
-            System.out.println("You equipped: " + armorItem.getName());
-        }
-    }
-
-    public Item getEquippedWeapon() {
-        return equippedWeapon;
-    }
-    public Item getEquippedArmor() {
-        return equippedArmor;
-    }
-
-    public int getTotalAttack() {
-        int total = getAttack();   // from Entity (25)
-        if (equippedWeapon != null) {
-            total += equippedWeapon.getAugDmg();
-        }
-        return total;
-    }
-
-    public int getTotalMaxHP() {
-        int total = getHp();  // from Entity (base HP)
-        if (equippedArmor != null) {
-            total += equippedArmor.getItemHp();
-        }
-        return total;
-    }
-
-
-    // Inventory
-    public void showInventory() {
-        if (inventory.isEmpty()) {
-            System.out.println("You are not carrying any items.");
-            return;
-        }
-
-        System.out.println("\n--- Inventory ---");
-        for (Item it : inventory) {
-            System.out.println(" - " + it.getName() + " (" + it.getType() + ")");
-        }
-    }
-
-    // Puzzle Reward
-    private String pendingPuzzleReward = null;
-
-    public String collectPendingPuzzleReward() {
-        String temp = pendingPuzzleReward;
-        pendingPuzzleReward = null;
-        return temp;
-    }
-
-
-    // Look Around
+    // The LOOK command This is a HUGE method that shows the player everything
     public void lookAround() {
         if (currentRoom == null) {
-            System.out.println("You see nothing...");
+            System.out.println("You see nothing");
             return;
         }
 
-        System.out.println("You look around carefully...");
+        System.out.println("You look around carefully");
 
         // Show room name & description again
         System.out.println("\n== " + currentRoom.getRoomName() + " ==");
         System.out.println(currentRoom.getRoomDesc());
 
-        // If the room has items
+        // Check if there are items to pick up
         if (currentRoom.hasItems()) {
             System.out.println("You see some items in this room:");
             for (Item it : currentRoom.getRoomInventory().getAllItems()) {
@@ -113,283 +55,74 @@ public class Player extends Entity {
             }
         }
 
-        // If the room has a puzzle
+        // Check for puzzles or monsters
         if (currentRoom.getPuzzle() != null) {
 
             // Puzzle not completed
             if (!currentRoom.getPuzzle().isCompleted()) {
-                System.out.println("There is a puzzle in this room.");
-                System.out.println("Type 'interact' to begin solving it.");
+                System.out.println("There is a puzzle in this room");
+                System.out.println("Type 'interact' to begin solving it");
             }
             // Puzzle already completed
             else {
-                System.out.println("The puzzle in this room has already been completed.");
-                // If the room has active monsters (spawned pack)
+                System.out.println("The puzzle in this room has already been completed");
 
+                // If the room has active monsters (spawned pack)
                 if (currentRoom.hasActiveMonsters()) {
                     java.util.List<Monster> pack = currentRoom.getActiveMonsters();
 
                     if (!pack.isEmpty()) {
                         String monsterName = pack.get(0).getName(); // same type in pack
-                        System.out.println("You see " + pack.size() + " " + monsterName + "(s) lurking here.");
-                        System.out.println("Type 'engage' to begin combat.");
+                        System.out.println("You see " + pack.size() + " " + monsterName + "(s) lurking here");
+                        System.out.println("Type 'engage' to begin combat");
                     }
                 }
             }
         }
     }
 
+    // -----------------------------
+    // STATS & DAMAGE CALCULATION
+    // Base stats plus equipment bonuses
+    // -----------------------------
 
-
-    // INTERACT (start puzzle logic)
-    public void interactWithPuzzle(Scanner in) {
-
-        // Get the puzzle in the player's current room
-        Puzzle puzzle = currentRoom.getPuzzle();
-
-        // No puzzle
-        if (puzzle == null) {
-            System.out.println("There is no puzzle in this room.");
-            return;
-        }
-
-        // Already solved
-        if (puzzle.isCompleted()) {
-            System.out.println("The puzzle in this room has already been completed.");
-            return;
-        }
-
-        // Start puzzle
-        System.out.println("\nPuzzle: " + puzzle.getPuzName());
-        System.out.println(puzzle.getQuestion());
-
-        System.out.print("Your answer: ");
-        String userAns = in.nextLine().trim();
-
-        boolean correct = puzzle.userAnswer(userAns);
-
-        if (correct) {
-            System.out.println("You solved the puzzle!");
-
-            // -----------------------------------------
-            // NEW CODE: Dispense Puzzle Reward
-            // -----------------------------------------
-            String rewardId = puzzle.getRewardItemIdOrName();
-
-            if (rewardId != null && !rewardId.isEmpty()) {
-
-                // Look up the real item using artifacts in Main
-                // Player cannot access artifacts directly
-                // So we will store reward to a temporary list,
-                // Main will hand the item to the player later.
-                this.pendingPuzzleReward = rewardId;
-
-                System.out.println("Reward available: " + rewardId);
-            }
-
-            return;
-        }
-
-        // Incorrect answer
-        int dmg = puzzle.getPenaltyHP();
-        this.takeDamage(dmg);
-
-        System.out.println("Incorrect! You lose " + dmg + " HP.");
-        System.out.println("Remaining HP: " + this.getHp());
-
-        // Puzzle locks if attempts exceeded (future use)
-        if (puzzle.isCompleted() && puzzle.getPuzAttempt() >= puzzle.getPuzMaxAtt()) {
-            System.out.println("The puzzle locks and cannot be retried.");
-        }
-
+    // Getter for the base armor value
+    public int getArmor() {
+        return armor;
+    }
+    // Setter for the base armor value
+    public void setArmor(int armor) {
+        this.armor = armor;
     }
 
-
-    // PICK UP ITEM FROM ROOM
-    public void pickupItem(String itemName) {
-
-        if (itemName == null || itemName.isEmpty()) {
-            System.out.println("Pick up what?");
-            return;
+    // Calculates the total damage the player can do
+    public int getTotalAttack() {
+        int total = getAttack();   // from Entity (base attack)
+        if (equippedWeapon != null) {
+            total += equippedWeapon.getAugDmg(); // Add the weapons damage bonus
         }
-
-        if (currentRoom == null) {
-            System.out.println("You are not in a room.");
-            return;
-        }
-
-        // Room inventory
-        Inventory roomInv = currentRoom.getRoomInventory();
-
-        // Find item in the room
-        Item item = roomInv.getItem(itemName);
-
-        if (item == null) {
-            System.out.println("That item is not here.");
-            return;
-        }
-
-        // Check inventory limit
-        if (inventory.size() >= 15) {
-            System.out.println("Your inventory is full.");
-            return;
-        }
-
-        // Move item from room -> player
-        roomInv.deleteItem(itemName);
-        inventory.add(item);
-
-        System.out.println("You picked up: " + item.getName());
+        return total;
     }
 
-    // EQUIP ITEM
-    public void equipItem(String itemName) {
-
-        if (itemName == null || itemName.isEmpty()) {
-            System.out.println("Equip what?");
-            return;
+    // Calculates the players maximum HP
+    public int getTotalMaxHP() {
+        int total = getHp();  // from Entity (base HP)
+        if (equippedArmor != null) {
+            total += equippedArmor.getItemHp(); // Add the armors HP bonus
         }
-
-        // Find item in inventory
-        Item item = findItemByName(itemName);
-
-        if (item == null) {
-            System.out.println("You don't have that item.");
-            return;
-        }
-
-        // Determine if item is a weapon (has damage stat)
-        boolean isWeapon = item.getAugDmg() > 0;
-
-        // Determine if item is armor/equipment (has HP or armor stat)
-        boolean isArmor = item.getItemHp() > 0;
-
-        // EQUIP AS WEAPON
-        if (isWeapon) {
-            this.equippedWeapon = item;
-            System.out.println("You equipped: " + item.getName());
-            return;
-        }
-
-        // EQUIP AS ARMOR
-        if (isArmor) {
-            this.equippedArmor = item;
-            System.out.println("You equipped: " + item.getName());
-            return;
-        }
-
-        // If item has no stats that qualify it
-        System.out.println("This item cannot be equipped.");
+        return total;
     }
 
-    // UNEQUIP ITEM
-    public void unequipItem(String itemName) {
-
-        if (itemName == null || itemName.isEmpty()) {
-            System.out.println("Unequip what?");
-            return;
-        }
-
-        // Normalize name for comparison
-        String name = itemName.trim().toLowerCase();
-
-        // Check if this is the equipped weapon
-        if (equippedWeapon != null && equippedWeapon.getName().toLowerCase().equals(name)) {
-            System.out.println("You unequipped: " + equippedWeapon.getName());
-            equippedWeapon = null;
-            return;
-        }
-
-        // Check if this is the equipped armor
-        if (equippedArmor != null && equippedArmor.getName().toLowerCase().equals(name)) {
-            System.out.println("You unequipped: " + equippedArmor.getName());
-            equippedArmor = null;
-            return;
-        }
-
-        // If item is in inventory but not equipped
-        Item invItem = findItemByName(itemName);
-        if (invItem != null) {
-            System.out.println("That item is not currently equipped.");
-        } else {
-            System.out.println("You don't have that item.");
-        }
+    // This overrides the parents takeDamage method to include armor reduction
+    @Override
+    public void takeDamage(int damage) {
+        int reduced = Math.max(0, damage - armor); // Armor reduces damage but minimum damage taken is 0
+        hp -= reduced;
+        if (hp < 0) hp = 0; // Cant go below zero HP
+        System.out.println(name + " takes " + reduced + " damage Remaining HP: " + hp);
     }
 
-
-    // DROP ITEM INTO ROOM
-    public void dropItem(String itemName) {
-
-        if (itemName == null || itemName.isEmpty()) {
-            System.out.println("Drop what?");
-            return;
-        }
-
-        if (currentRoom == null) {
-            System.out.println("You are not in a room.");
-            return;
-        }
-
-        // Try to find item in player inventory
-        Item i = findItemByName(itemName);
-
-        if (i == null) {
-            System.out.println("You don't have that item.");
-            return;
-        }
-
-        // If item is equipped, prevent accidental unequip OR auto-unequip
-        if (i == equippedWeapon) {
-            System.out.println("You cannot drop your currently equipped weapon.");
-            return;
-        }
-
-        if (i == equippedArmor) {
-            System.out.println("You cannot drop your currently equipped armor.");
-            return;
-        }
-
-        // Remove from player and add to room inventory
-        inventory.remove(i);
-        currentRoom.getRoomInventory().addItem(i);
-
-        System.out.println("You dropped: " + i.getName());
-    }
-
-
-
-    // Inspect an item in player inventory
-    public void inspectItem(String itemName) {
-        if (itemName == null || itemName.isEmpty()) {
-            System.out.println("Please specify an item to inspect.");
-            return;
-        }
-
-        Item i = findItemByName(itemName);
-
-        if (i == null) {
-            System.out.println("That item is not in your inventory.");
-            return;
-        }
-
-        System.out.println("\n--- Item Details ---");
-        System.out.println("Name: " + i.getName());
-        System.out.println("Type: " + i.getType());
-        System.out.println("Description: " + i.getDescription());
-
-        // Optional: show stats only if item has them
-        if (i.getAugDmg() > 0) {
-            System.out.println("Damage Bonus: +" + i.getAugDmg());
-        }
-        if (i.getAugHP() > 0) {
-            System.out.println("Heal Amount: +" + i.getAugHP() + " HP");
-        }
-        if (i.getItemHp() > 0) {
-            System.out.println("Armor/HP Bonus: +" + i.getItemHp());
-        }
-    }
-
-    // CHECK STATS
+    // Displays the players current stats and equipped gear
     public void showStats() {
         System.out.println("\n--- Player Stats ---");
         System.out.println("HP: " + getHp() + " / " + getTotalMaxHP());
@@ -416,7 +149,504 @@ public class Player extends Entity {
     }
 
 
-    // HELP
+    // -----------------------------
+    // INVENTORY MANAGEMENT
+    // Adding removing and showing items in the bag
+    // -----------------------------
+
+    // Simple add to inventory list
+    public void addItem(Item i) {
+        inventory.add(i);
+    }
+    // Simple remove from inventory list
+    public void removeItem(Item i) {
+        inventory.remove(i);
+    }
+    // Returns the entire inventory list
+    public ArrayList<Item> getInventory()
+    {
+        return inventory;
+    }
+
+    // Loops through the inventory to find an item by name ignoring case
+    public Item findItemByName(String name) {
+        for (Item i : inventory) {
+            if (i.getName().equalsIgnoreCase(name)) return i;
+        }
+        return null;
+    }
+
+    // Lists all items currently in the players inventory
+    public void showInventory() {
+        if (inventory.isEmpty()) {
+            System.out.println("You are not carrying any items");
+            return;
+        }
+
+        System.out.println("\n--- Inventory ---");
+        for (Item it : inventory) {
+            System.out.println(" - " + it.getName() + " (" + it.getType() + ")");
+        }
+    }
+
+    // INSPECT ITEM
+    public void inspectItem(String itemName) {
+        if (itemName == null || itemName.isEmpty()) {
+            System.out.println("Please specify an item to inspect");
+            return;
+        }
+
+        Item i = findItemByName(itemName);
+
+        if (i == null) {
+            System.out.println("That item is not in your inventory");
+            return;
+        }
+
+        System.out.println("\n--- Item Details ---");
+        System.out.println("Name: " + i.getName());
+        System.out.println("Type: " + i.getType());
+        System.out.println("Description: " + i.getDescription());
+
+        // Optional show stats only if item has them
+        if (i.getAugDmg() > 0) {
+            System.out.println("Damage Bonus: +" + i.getAugDmg());
+        }
+        if (i.getAugHP() > 0) {
+            System.out.println("Heal Amount: +" + i.getAugHP() + " HP");
+        }
+        if (i.getItemHp() > 0) {
+            System.out.println("Armor/HP Bonus: +" + i.getItemHp());
+        }
+    }
+
+    // PICK UP ITEM FROM ROOM
+    public void pickupItem(String itemName) {
+
+        if (itemName == null || itemName.isEmpty()) {
+            System.out.println("Pick up what");
+            return;
+        }
+
+        if (currentRoom == null) {
+            System.out.println("You are not in a room");
+            return;
+        }
+
+        // Room inventory
+        Inventory roomInv = currentRoom.getRoomInventory();
+
+        // Find item in the room
+        Item item = roomInv.getItem(itemName);
+
+        if (item == null) {
+            System.out.println("That item is not here");
+            return;
+        }
+
+        // Check inventory limit
+        if (inventory.size() >= 15) {
+            System.out.println("Your inventory is full");
+            return;
+        }
+
+        // Move item from room -> player
+        roomInv.deleteItem(itemName);
+        inventory.add(item);
+
+        System.out.println("You picked up: " + item.getName());
+    }
+
+    // DROP ITEM INTO ROOM
+    public void dropItem(String itemName) {
+
+        if (itemName == null || itemName.isEmpty()) {
+            System.out.println("Drop what");
+            return;
+        }
+
+        if (currentRoom == null) {
+            System.out.println("You are not in a room");
+            return;
+        }
+
+        // Try to find item in player inventory
+        Item i = findItemByName(itemName);
+
+        if (i == null) {
+            System.out.println("You dont have that item");
+            return;
+        }
+
+        // If item is equipped prevent accidental drop
+        if (i == equippedWeapon) {
+            System.out.println("You cannot drop your currently equipped weapon");
+            return;
+        }
+
+        if (i == equippedArmor) {
+            System.out.println("You cannot drop your currently equipped armor");
+            return;
+        }
+
+        // Remove from player and add to room inventory
+        inventory.remove(i);
+        currentRoom.getRoomInventory().addItem(i);
+
+        System.out.println("You dropped: " + i.getName());
+    }
+
+    // -----------------------------
+    // EQUIPMENT MANAGEMENT
+    // Equipping unequipping gear
+    // -----------------------------
+
+    // Getter for the equipped weapon
+    public Item getEquippedWeapon() {
+        return equippedWeapon;
+    }
+    // Getter for the equipped armor
+    public Item getEquippedArmor() {
+        return equippedArmor;
+    }
+
+    // Equips a specific weapon Item
+    public void equipWeapon(Item weapon) {
+        if (weapon != null && weapon.getType().equalsIgnoreCase("Weapon")) {
+            this.equippedWeapon = weapon;
+            System.out.println("You equipped: " + weapon.getName());
+        }
+    }
+
+    // Equips a specific armor Item
+    public void equipArmor(Item armorItem) {
+        if (armorItem != null && armorItem.getType().equalsIgnoreCase("Equipment")) {
+            this.equippedArmor = armorItem;
+            System.out.println("You equipped: " + armorItem.getName());
+        }
+    }
+
+    // General Equip method that figures out the type itself
+    public void equipItem(String itemName) {
+
+        if (itemName == null || itemName.isEmpty()) {
+            System.out.println("Equip what");
+            return;
+        }
+
+        // Find item in inventory
+        Item item = findItemByName(itemName);
+
+        if (item == null) {
+            System.out.println("You dont have that item");
+            return;
+        }
+
+        // Determine if item is a weapon (has damage stat)
+        boolean isWeapon = item.getAugDmg() > 0;
+
+        // Determine if item is armor/equipment (has HP or armor stat)
+        boolean isArmor = item.getItemHp() > 0;
+
+        // EQUIP AS WEAPON
+        if (isWeapon) {
+            this.equippedWeapon = item;
+            System.out.println("You equipped: " + item.getName());
+            return;
+        }
+
+        // EQUIP AS ARMOR
+        if (isArmor) {
+            this.equippedArmor = item;
+            System.out.println("You equipped: " + item.getName());
+            return;
+        }
+
+        // If item has no stats that qualify it
+        System.out.println("This item cannot be equipped");
+    }
+
+    // UNEQUIP ITEM
+    public void unequipItem(String itemName) {
+
+        if (itemName == null || itemName.isEmpty()) {
+            System.out.println("Unequip what");
+            return;
+        }
+
+        // Normalize name for comparison
+        String name = itemName.trim().toLowerCase();
+
+        // Check if this is the equipped weapon
+        if (equippedWeapon != null && equippedWeapon.getName().toLowerCase().equals(name)) {
+            System.out.println("You unequipped: " + equippedWeapon.getName());
+            equippedWeapon = null;
+            return;
+        }
+
+        // Check if this is the equipped armor
+        if (equippedArmor != null && equippedArmor.getName().toLowerCase().equals(name)) {
+            System.out.println("You unequipped: " + equippedArmor.getName());
+            equippedArmor = null;
+            return;
+        }
+
+        // If item is in inventory but not equipped
+        Item invItem = findItemByName(itemName);
+        if (invItem != null) {
+            System.out.println("That item is not currently equipped");
+        } else {
+            System.out.println("You dont have that item");
+        }
+    }
+
+    // -----------------------------
+    // PUZZLE INTERACTION
+    // Methods for solving puzzles and handling rewards
+    // -----------------------------
+
+    // Getter for the pending puzzle reward ID
+    public String collectPendingPuzzleReward() {
+        String temp = pendingPuzzleReward;
+        pendingPuzzleReward = null; // Clear it out after collection
+        return temp;
+    }
+
+
+    // INTERACT start puzzle logic
+    public void interactWithPuzzle(Scanner in) {
+
+        // Get the puzzle in the players current room
+        Puzzle puzzle = currentRoom.getPuzzle();
+
+        // No puzzle
+        if (puzzle == null) {
+            System.out.println("There is no puzzle in this room");
+            return;
+        }
+
+        // Already solved
+        if (puzzle.isCompleted()) {
+            System.out.println("The puzzle in this room has already been completed");
+            return;
+        }
+
+        // Start puzzle
+        System.out.println("\nPuzzle: " + puzzle.getPuzName());
+        System.out.println(puzzle.getQuestion());
+
+        System.out.print("Your answer: ");
+        String userAns = in.nextLine().trim();
+
+        boolean correct = puzzle.userAnswer(userAns);
+
+        if (correct) {
+            System.out.println("You solved the puzzle");
+
+            // -----------------------------------------
+            // NEW CODE Dispense Puzzle Reward
+            // -----------------------------------------
+            String rewardId = puzzle.getRewardItemIdOrName();
+
+            if (rewardId != null && !rewardId.isEmpty()) {
+
+                // Store reward to a temporary variable for Main to handle later
+                this.pendingPuzzleReward = rewardId;
+
+                System.out.println("Reward available: " + rewardId);
+            }
+
+            return;
+        }
+
+        // Incorrect answer
+        int dmg = puzzle.getPenaltyHP();
+        this.takeDamage(dmg);
+
+        System.out.println("Incorrect You lose " + dmg + " HP");
+        System.out.println("Remaining HP: " + this.getHp());
+
+        // Puzzle locks if attempts exceeded (future use)
+        if (puzzle.isCompleted() && puzzle.getPuzAttempt() >= puzzle.getPuzMaxAtt()) {
+            System.out.println("The puzzle locks and cannot be retried");
+        }
+
+    }
+
+    // -----------------------------
+    // ITEM USAGE
+    // What happens when the player USES an item
+    // -----------------------------
+
+    // USE ITEM (consumables key items doll fusion)
+    public void useItem(String itemName, java.util.Map<String, Item> artifacts) {
+
+        if (itemName == null || itemName.isEmpty()) {
+            System.out.println("Use what");
+            return;
+        }
+
+        // Find item in inventory
+        Item item = findItemByName(itemName);
+
+        if (item == null) {
+            System.out.println("You dont have that item");
+            return;
+        }
+
+        String type = item.getType();
+
+        // -------------------------------------------------------
+        // 1 CONSUMABLE (heals player)
+        // -------------------------------------------------------
+        if (type.equalsIgnoreCase("Consumable")) {
+
+            int heal = item.getAugHP();
+
+            if (heal <= 0) {
+                System.out.println("This item cannot be used");
+                return;
+            }
+
+            // Heal the player
+            this.hp += heal;
+            System.out.println("You consume " + item.getName() + " and restore " + heal + " HP");
+            System.out.println("Current HP: " + this.hp);
+
+            // Remove item after use
+            inventory.remove(item);
+            return;
+        }
+
+        // -------------------------------------------------------
+        // 2 KEY ITEM (unlock doors)
+        // Description contains Unlock RM
+        // -------------------------------------------------------
+        if (type.equalsIgnoreCase("Key Item")) {
+
+            String desc = item.getDescription().toUpperCase();
+
+            // Does description contain target room
+            if (!desc.contains("RM")) {
+                System.out.println("This item cannot be used right now");
+                return;
+            }
+
+            // Extract room ID inside description (like RM5)
+            String unlockTarget = "";
+            for (String part : desc.split("\\s+")) {
+                if (part.startsWith("RM")) {
+                    unlockTarget = part.trim();
+                    break;
+                }
+            }
+
+            if (unlockTarget.isEmpty()) {
+                System.out.println("This item cannot be used right now");
+                return;
+            }
+
+            boolean unlocked = false;
+
+            // Look through the current rooms exits
+            for (String dir : currentRoom.getConnectionsMap().keySet()) {
+
+                // If this exit is actually locked according to RoomlockedExits
+                if (currentRoom.isExitLocked(dir)) {
+
+                    String dest = currentRoom.getConnectionsMap().get(dir);
+
+                    // If this locked exit leads to the target room
+                    if (dest.equalsIgnoreCase(unlockTarget)) {
+
+                        // UNLOCK IT
+                        // Overwrite the exit cleanly (already clean)
+                        currentRoom.addExit(dir, dest);
+
+                        // Remove the lock
+                        currentRoom.unlockExit(dir);
+
+                        System.out.println("You used " + item.getName() +
+                                " The door to " + dest + " is now unlocked");
+
+                        unlocked = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!unlocked) {
+                System.out.println("This item cannot be used right now");
+                return;
+            }
+
+            // Consume key after unlocking
+            inventory.remove(item);
+            return;
+        }
+
+        // -------------------------------------------------------
+        // 3 DOLL FUSION (Collectible) must be in RM20
+        // -------------------------------------------------------
+        if (type.equalsIgnoreCase("Collectible")) {
+
+            // Only works in Old Storage Shed (RM20)
+            if (!currentRoom.getRoomID().equalsIgnoreCase("RM20")) {
+
+                boolean hasHead  = findItemByName("Doll Head")  != null;
+                boolean hasTorso = findItemByName("Doll Torso") != null;
+                boolean hasLimbs = findItemByName("Doll Limbs") != null;
+
+                if (hasHead && hasTorso && hasLimbs) {
+                    System.out.println("Faint humming can be heard from Old Storage Shed");
+                } else {
+                    System.out.println("This item cannot be used right now");
+                }
+                return;
+            }
+
+            // Check for all doll parts
+            Item head  = findItemByName("Doll Head");
+            Item torso = findItemByName("Doll Torso");
+            Item limbs = findItemByName("Doll Limbs");
+
+            if (head == null || torso == null || limbs == null) {
+                System.out.println("This cannot be used without the other pieces");
+                return;
+            }
+
+            // Fuse into Mothers Grief (IT17)
+            Item motherGrief = artifacts.get("IT17");
+
+            if (motherGrief == null) {
+                System.out.println("Something went wrong the fused weapon could not be created");
+                return;
+            }
+
+            // Remove old pieces
+            inventory.remove(head);
+            inventory.remove(torso);
+            inventory.remove(limbs);
+
+            // Add new weapon
+            inventory.add(motherGrief);
+
+            System.out.println("The doll pieces shudder violently");
+            System.out.println("They merge into a horrific weapon Mothers Grief");
+
+            return;
+        }
+
+        // -------------------------------------------------------
+        // 4 Not usable
+        // -------------------------------------------------------
+        System.out.println("This item cannot be used");
+    }
+
+    // -----------------------------
+    // HELP COMMAND
+    // Prints a list of all game commands
+    // -----------------------------
     public void showHelp() {
         System.out.println("""
             Commands:
@@ -442,197 +672,5 @@ public class Player extends Entity {
               HELP             - show this list
               QUIT / EXIT      - leave the game
             """);
-    }
-
-    // USE ITEM (consumables, key items, doll fusion)
-    public void useItem(String itemName, java.util.Map<String, Item> artifacts) {
-
-        if (itemName == null || itemName.isEmpty()) {
-            System.out.println("Use what?");
-            return;
-        }
-
-        // Find item in inventory
-        Item item = findItemByName(itemName);
-
-        if (item == null) {
-            System.out.println("You don't have that item.");
-            return;
-        }
-
-        String type = item.getType();
-
-        // -------------------------------------------------------
-        // 1. CONSUMABLE (heals player)
-        // -------------------------------------------------------
-        if (type.equalsIgnoreCase("Consumable")) {
-
-            int heal = item.getAugHP();
-
-            if (heal <= 0) {
-                System.out.println("This item cannot be used.");
-                return;
-            }
-
-            // Heal the player
-            this.hp += heal;
-            System.out.println("You consume " + item.getName() + " and restore " + heal + " HP.");
-            System.out.println("Current HP: " + this.hp);
-
-            // Remove item after use
-            inventory.remove(item);
-            return;
-        }
-
-        // -------------------------------------------------------
-        // 2. KEY ITEM (unlock doors)
-        // Description contains: "Unlock RM#"
-        // -------------------------------------------------------
-        if (type.equalsIgnoreCase("Key Item")) {
-
-            String desc = item.getDescription().toUpperCase();
-
-            // Does description contain target room?
-            if (!desc.contains("RM")) {
-                System.out.println("This item cannot be used right now.");
-                return;
-            }
-
-            // Extract room ID inside description (like RM5)
-            String unlockTarget = "";
-            for (String part : desc.split("\\s+")) {
-                if (part.startsWith("RM")) {
-                    unlockTarget = part.trim();
-                    break;
-                }
-            }
-
-            if (unlockTarget.isEmpty()) {
-                System.out.println("This item cannot be used right now.");
-                return;
-            }
-
-            boolean unlocked = false;
-
-            // Look through the current room's exits
-            for (String dir : currentRoom.getConnectionsMap().keySet()) {
-
-                // If this exit is actually locked according to Room.lockedExits
-                if (currentRoom.isExitLocked(dir)) {
-
-                    String dest = currentRoom.getConnectionsMap().get(dir);
-
-                    // If this locked exit leads to the target room
-                    if (dest.equalsIgnoreCase(unlockTarget)) {
-
-                        // UNLOCK IT
-                        // Overwrite the exit cleanly (already clean)
-                        currentRoom.addExit(dir, dest);
-
-                        // Remove the lock
-                        currentRoom.unlockExit(dir);
-
-                        System.out.println("You used " + item.getName() +
-                                ". The door to " + dest + " is now unlocked!");
-
-                        unlocked = true;
-                        break;
-                    }
-                }
-            }
-
-            if (!unlocked) {
-                System.out.println("This item cannot be used right now.");
-                return;
-            }
-
-            // Consume key after unlocking
-            inventory.remove(item);
-            return;
-        }
-
-        // -------------------------------------------------------
-        // 3. DOLL FUSION (Collectible) – must be in RM20
-        // -------------------------------------------------------
-        if (type.equalsIgnoreCase("Collectible")) {
-
-            // Only works in Old Storage Shed (RM20)
-            if (!currentRoom.getRoomID().equalsIgnoreCase("RM20")) {
-
-                boolean hasHead  = findItemByName("Doll Head")  != null;
-                boolean hasTorso = findItemByName("Doll Torso") != null;
-                boolean hasLimbs = findItemByName("Doll Limbs") != null;
-
-                if (hasHead && hasTorso && hasLimbs) {
-                    System.out.println("Faint humming can be heard from Old Storage Shed...");
-                } else {
-                    System.out.println("This item cannot be used right now.");
-                }
-                return;
-            }
-
-            // Check for all doll parts
-            Item head  = findItemByName("Doll Head");
-            Item torso = findItemByName("Doll Torso");
-            Item limbs = findItemByName("Doll Limbs");
-
-            if (head == null || torso == null || limbs == null) {
-                System.out.println("This cannot be used without the other pieces.");
-                return;
-            }
-
-            // Fuse into Mother's Grief (IT17)
-            Item motherGrief = artifacts.get("IT17");
-
-            if (motherGrief == null) {
-                System.out.println("Something went wrong… the fused weapon could not be created.");
-                return;
-            }
-
-            // Remove old pieces
-            inventory.remove(head);
-            inventory.remove(torso);
-            inventory.remove(limbs);
-
-            // Add new weapon
-            inventory.add(motherGrief);
-
-            System.out.println("The doll pieces shudder violently...");
-            System.out.println("They merge into a horrific weapon: Mother's Grief!");
-
-            return;
-        }
-
-        // -------------------------------------------------------
-        // 4. Not usable
-        // -------------------------------------------------------
-        System.out.println("This item cannot be used.");
-    }
-
-
-
-    public void addItem(Item i) {
-        inventory.add(i);
-    }
-    public void removeItem(Item i) {
-        inventory.remove(i);
-    }
-    public ArrayList<Item> getInventory()
-    {
-        return inventory;
-    }
-    public Item findItemByName(String name) {
-        for (Item i : inventory) {
-            if (i.getName().equalsIgnoreCase(name)) return i;
-        }
-        return null;
-    }
-
-    @Override
-    public void takeDamage(int damage) {
-        int reduced = Math.max(0, damage - armor);
-        hp -= reduced;
-        if (hp < 0) hp = 0;
-        System.out.println(name + " takes " + reduced + " damage! Remaining HP: " + hp);
     }
 }

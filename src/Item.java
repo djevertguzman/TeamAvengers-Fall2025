@@ -1,5 +1,4 @@
-
-
+//Tuan Nguyen
 public class Item {
 
     private int itmID;

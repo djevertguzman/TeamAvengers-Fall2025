@@ -1,4 +1,4 @@
-
+// Tuan Nguyen
 public class Equipment extends Item {
 
     private int armorValue;

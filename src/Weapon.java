@@ -1,4 +1,5 @@
-public class Weapon extends Item {
+//Tuan Nguyen
+    public class Weapon extends Item {
 
     public Weapon(int id, String name, String desc, int dmg) {
         super(id, name, "Weapon", desc, dmg, 0, 0, false);
