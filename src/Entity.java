@@ -1,4 +1,3 @@
-
 public class Entity {
     protected String name;
     protected int hp;
@@ -37,4 +36,5 @@ public class Entity {
     public boolean isAlive() {
         return hp > 0;
     }
+
 }
