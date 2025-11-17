@@ -47,6 +47,7 @@ public class Main {
             player.equipArmor(startingArmor);     // Auto-equip
         }
 
+
         player.setCurrentRoom(currentRoom);
         Scanner in = new Scanner(System.in);
 
@@ -309,6 +310,13 @@ public class Main {
                 if (destId == null) {
                     System.out.println("You can't go that way.");
                 } else {
+
+                    // 🔒 CHECK IF THIS EXIT IS LOCKED
+                    if (currentRoom.isExitLocked(dir)) {
+                        System.out.println("The door is locked.");
+                        continue;   // go back to the top of the while(running) loop
+                    }
+
                     Room next = m.rooms.get(destId);
                     if (next != null) {
                         currentRoom = next;
@@ -354,9 +362,24 @@ public class Main {
                 if (parts.length > 3) {
                     String[] exitArr = parts[3].trim().split(",");
                     for (String ex : exitArr) {
+
                         if (ex.contains(":")) {
                             String[] e = ex.trim().split(":");
-                            room.addExit(e[0], e[1]);
+                            String dir = e[0].trim().toUpperCase();
+
+                            String rawDest = e[1].trim();           // e.g. "RM5(l)"
+                            boolean locked = rawDest.contains("(l)");
+
+                            // Strip "(l)" from destination
+                            String cleanDest = rawDest.replace("(l)", "").trim();
+
+                            // Add normalized exit
+                            room.addExit(dir, cleanDest);
+
+                            // If original was locked → record it
+                            if (locked) {
+                                room.lockExit(dir);
+                            }
                         }
                     }
                 }
@@ -366,10 +389,12 @@ public class Main {
 
             file.close();
             System.out.println("Rooms loaded.");
+
         } catch (Exception e) {
             System.out.println("ERROR loading rooms: " + e.getMessage());
         }
     }
+
 
     public void loadMonsters(String filename) {
         try {
@@ -455,7 +480,7 @@ public class Main {
                 String[] parts = line.split("\\|");
 
                 // Raw data
-                String rawId = parts[0].trim();         // "IT1"
+                String rawId = parts[0].trim().toUpperCase();   // "IT1"
                 String name = parts[1].trim();
                 String type = parts[2].trim();
                 String desc = parts[3].trim();
@@ -491,6 +516,10 @@ public class Main {
 
             file.close();
             System.out.println("Artifacts loaded.");
+            System.out.println("Loaded Artifacts:");
+            for (String key : artifacts.keySet()) {
+                System.out.println("[" + key + "]");
+            }
 
         } catch (Exception e) {
             System.out.println("ERROR loading artifacts: " + e.getMessage());

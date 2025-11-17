@@ -1,4 +1,4 @@
-PZ1|All in esrever|RM7|Read the riddle backwards: "rewsna" answer|ANSWER|Master Bedroom Key|Lose 10 HP per wrong attempt
+PZ1|All in esrever|RM7|Read the riddle backwards: "rewsna"|ANSWER|Master Bedroom Key|Lose 10 HP per wrong attempt
 PZ2|Chest of Seasons|RM19|Four symbol dials bound by vines; order Sun→Moon→Tree→Eye|SUN MOON TREE EYE|Rifle|Lose 25 HP per wrong attempt
 PZ3|Colored Lights|RM14|Press buttons in right order: Red→Green→Blue|RED GREEN BLUE|Shotgun|Lose 15 HP per wrong attempt
 PZ4|Flashing Colors TV|RM10|Enter the 5-letter word hinted by color order|GOOBY|Backyard Key|Lose 20 HP per wrong attempt
@@ -6,4 +6,4 @@ PZ5|Family Feast|RM12|Choose the only clean plate from 1–5|3|Pistol|Lose 20 HP
 PZ6|Word Beneath the Water|RM4|Type “EXSANGUINATION” within 15 seconds|EXSANGUINATION|Doll Limbs|Lose 50 HP per wrong attempt
 PZ7|Word in the Fog|RM18|Type “OBLIVION” within 12 seconds|OBLIVION|Doll Torso|Lose 30 HP per wrong attempt
 PZ8|Word of Stillness|RM11|Type “CESSATION” within 9 seconds|CESSATION|Doll Head|Lose 40 HP per wrong attempt
-PZ9|Final Remembrance|RM22|Enter starting and ending rooms: “Front Gate Courtyard”, “Weeping Woods”|FRONT GATE COURTYARD → WEEPING WOODS|Flashlight|Lose 50 HP per wrong attempt
+PZ9|Final Remembrance|RM22|Enter starting and ending rooms: “Front Gate Courtyard”, “Weeping Woods”|FRONT GATE COURTYARD WEEPING WOODS|Flashlight|Lose 50 HP per wrong attempt

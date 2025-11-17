@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Room {
+    private java.util.HashSet<String> lockedExits = new java.util.HashSet<>();
 
     // Active monsters in this room (spawned pack)
     private List<Monster> activeMonsters = new ArrayList<>();  // GABE
@@ -46,6 +47,12 @@ public class Room {
         return roomDesc;
     }
 
+    public boolean isExitLocked(String dir) {
+        if (dir == null) return false;
+        return lockedExits.contains(dir.toUpperCase());
+    }
+
+
     public Inventory getRoomInventory() {
         return rmInv;
     }
@@ -70,6 +77,17 @@ public class Room {
     public void clearActiveMonsters() { // GABE
         activeMonsters.clear();
     }
+
+    public void lockExit(String dir) {
+        lockedExits.add(dir);
+    }
+
+    public void unlockExit(String dir) {
+        if (dir == null) return;
+        lockedExits.remove(dir.toUpperCase());
+    }
+
+
 
     public boolean hasActiveMonsters() { // GABE
         return !activeMonsters.isEmpty();

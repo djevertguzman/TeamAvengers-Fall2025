@@ -497,31 +497,41 @@ public class Player extends Entity {
                 return;
             }
 
-            // Extract room ID after the word UNLOCK
-            // Example: "Unlock RM5" -> "RM5"
-            String unlockTarget = desc.substring(desc.indexOf("UNLOCK") + 6).trim();
+            // Extract room ID from description (example: Unlock RM5)
+            String unlockTarget = "";
+            for (String part : desc.split("\\s+")) {
+                if (part.startsWith("RM")) {
+                    unlockTarget = part.trim();
+                    break;
+                }
+            }
+
+            if (unlockTarget.isEmpty()) {
+                System.out.println("This item cannot be used right now.");
+                return;
+            }
 
             boolean unlocked = false;
 
-            // Loop through all exits in the current room
+            // Loop through exits in current room
             for (String dir : currentRoom.getConnectionsMap().keySet()) {
 
-                String rawExit = currentRoom.getConnectionsMap().get(dir);
+                String dest = currentRoom.getConnectionsMap().get(dir);   // example: "RM5(l)" or "RM5"
 
-                // A locked exit looks like: "RM5(l)"
-                if (rawExit.contains("(")) {
+                // Check if this exit is locked by looking for (l)
+                if (dest.contains("(l)")) {
 
-                    // Extract "RM5" and ignore "(l)"
-                    String dest = rawExit.substring(0, rawExit.indexOf("(")).trim();
+                    // Remove "(l)" → clean room ID
+                    String cleanDest = dest.replace("(l)", "").trim();
 
-                    // Check if this is the door the key unlocks
-                    if (dest.equalsIgnoreCase(unlockTarget)) {
+                    // If key matches this locked room
+                    if (cleanDest.equalsIgnoreCase(unlockTarget)) {
 
-                        // Overwrite the exit with the clean version (unlocked)
-                        currentRoom.addExit(dir, dest);
+                        // OVERWRITE this exit with the unlocked room ID
+                        currentRoom.addExit(dir, cleanDest);
 
                         System.out.println("You used " + item.getName() +
-                                ". The door to " + dest + " is now unlocked!");
+                                ". The door to " + cleanDest + " is now unlocked!");
 
                         unlocked = true;
                         break;
@@ -534,7 +544,7 @@ public class Player extends Entity {
                 return;
             }
 
-            // Key is consumed after unlocking
+            // Remove key after use
             inventory.remove(item);
             return;
         }
