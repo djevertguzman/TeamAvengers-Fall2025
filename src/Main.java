@@ -47,15 +47,6 @@ public class Main {
             player.equipArmor(startingArmor);     // Auto-equip
         }
 
-        // Give player all 3 doll parts (for testing)
-        Item dollHead  = m.artifacts.get("IT14");
-        Item dollTorso = m.artifacts.get("IT15");
-        Item dollLimbs = m.artifacts.get("IT16");
-
-        if (dollHead != null)  player.addItem(dollHead);
-        if (dollTorso != null) player.addItem(dollTorso);
-        if (dollLimbs != null) player.addItem(dollLimbs);
-
 
         player.setCurrentRoom(currentRoom);
         Scanner in = new Scanner(System.in);
