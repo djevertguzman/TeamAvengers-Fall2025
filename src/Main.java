@@ -47,6 +47,15 @@ public class Main {
             player.equipArmor(startingArmor);     // Auto-equip
         }
 
+        // Give player all 3 doll parts (for testing)
+        Item dollHead  = m.artifacts.get("IT14");
+        Item dollTorso = m.artifacts.get("IT15");
+        Item dollLimbs = m.artifacts.get("IT16");
+
+        if (dollHead != null)  player.addItem(dollHead);
+        if (dollTorso != null) player.addItem(dollTorso);
+        if (dollLimbs != null) player.addItem(dollLimbs);
+
 
         player.setCurrentRoom(currentRoom);
         Scanner in = new Scanner(System.in);
@@ -310,13 +319,6 @@ public class Main {
                 if (destId == null) {
                     System.out.println("You can't go that way.");
                 } else {
-
-                    // 🔒 CHECK IF THIS EXIT IS LOCKED
-                    if (currentRoom.isExitLocked(dir)) {
-                        System.out.println("The door is locked.");
-                        continue;   // go back to the top of the while(running) loop
-                    }
-
                     Room next = m.rooms.get(destId);
                     if (next != null) {
                         currentRoom = next;
