@@ -1,4 +1,6 @@
 //Tuan Nguyen
+package mainGame;
+
 public class Consumable extends Item {
 
     private boolean stackable;

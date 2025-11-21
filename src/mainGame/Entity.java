@@ -1,4 +1,6 @@
 // Gabriel Peart & Evert Guzman
+package mainGame;
+
 public class Entity {
 
     // These variables are PROTECTED so that classes like Player and Monster

@@ -1,4 +1,6 @@
 // Gabriel Peart & Evert Guzman
+package mainGame;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -647,7 +649,7 @@ public class Player extends Entity {
     // HELP COMMAND
     // Prints a list of all game commands
     // -----------------------------
-    public void showHelp() {
+    public static void showHelp() {
         System.out.println("""
             Commands:
               N / NORTH / GO N / GO NORTH

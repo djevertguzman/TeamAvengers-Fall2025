@@ -1,4 +1,6 @@
 // Gabriel Peart
+package mainGame;
+
 public class Monster extends Entity {
 
     // --- Monster Specific Fields ---

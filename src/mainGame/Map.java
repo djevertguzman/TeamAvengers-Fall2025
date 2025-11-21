@@ -1,4 +1,6 @@
 // Skylor Prince
+package mainGame;
+
 public class Map {
 
 

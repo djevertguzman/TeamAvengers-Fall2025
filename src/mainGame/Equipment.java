@@ -1,4 +1,6 @@
 // Tuan Nguyen
+package mainGame;
+
 public class Equipment extends Item {
 
     private int armorValue;

@@ -1,4 +1,6 @@
 //Tuan Nguyen
+package mainGame;
+
 import java.util.ArrayList;
 public class Collectable extends Item {
 

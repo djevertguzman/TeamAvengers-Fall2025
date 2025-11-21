@@ -1,8 +1,12 @@
 //Gabriel Peart & Evert Guzman
+package mainGame;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+
+import modelView.Controller;
 
 public class Main {
 
@@ -11,15 +15,18 @@ public class Main {
     private Map<String, Room> rooms = new HashMap<>(); // All rooms by ID
     private Map<String, Monster> monsters = new HashMap<>(); // All monster templates by ID
     private Map<String, Item> artifacts = new HashMap<>(); // All item templates by ID
-
     private java.util.Random rng = new java.util.Random(); // A random number generator for luck
+    private static boolean running = true; //Controls if the main loop is running.
+    static Player player = new Player("Player");
+    static Room currentRoom;
+    static Main m;
 
     // --------------------------
     // MAIN METHOD This is where the program starts
     // --------------------------
     public static void main(String[] args) {
 
-        Main m = new Main(); // We create an instance of Main to run the non-static methods
+        m = new Main(); // We create an instance of Main to run the non-static methods
 
         // Load data from files
         m.loadRooms("Rooms.txt");
@@ -28,8 +35,7 @@ public class Main {
         m.loadArtifacts("Artifacts.txt");
 
         // Create player and start in RM1
-        Player player = new Player("Player");
-        Room currentRoom = m.rooms.get("RM1"); // Always start here
+        currentRoom = m.rooms.get("RM1"); // Always start here
 
         if (currentRoom == null) {
             System.out.println("ERROR Starting room RM1 not found");
@@ -60,13 +66,12 @@ public class Main {
         System.out.println("=====================================");
         System.out.println("Type HELP for commands\n");
 
-        boolean running = true; // The main loop condition
 
         // -------------------------------------------------------
         // GAME LOOP This runs until the player quits or dies
         // -------------------------------------------------------
         while (running) {
-
+        	String playDir = null;
             // Print room info at the start of every turn
             System.out.println("\n== " + currentRoom.getRoomName() + " ==");
             System.out.println(currentRoom.getRoomDesc());
@@ -114,42 +119,45 @@ public class Main {
             } else {
                 System.out.println("There are no exits here");
             }
+            
+            Controller.switchContext(0);
+            Controller.getUSRInput();
 
             // Input prompt
-            System.out.print("\n> ");
-            String input = in.nextLine().trim();
+            //System.out.print("\n> ");
+            //String input = in.nextLine().trim();
 
-            // Quit
-            if (input.equalsIgnoreCase("quit") || input.equalsIgnoreCase("exit")) {
-                running = false;
-                System.out.println("Goodbye");
-                continue;
-            }
+            // Quit - Disabled
+            //if (input.equalsIgnoreCase("quit") || input.equalsIgnoreCase("exit")) {
+              //  running = false;
+                //System.out.println("Goodbye");
+                //continue;
+            //}
 
-            // Help
-            if (input.equalsIgnoreCase("help")) {
-                player.showHelp();
-                continue;
-            }
+            // Help - Disabled
+            //if (input.equalsIgnoreCase("help")) {
+              //  player.showHelp();
+               // continue;
+            //}
 
             // --- Inventory and Equipment Commands ---
 
             // PICKUP ITEM
-            if (input.toLowerCase().startsWith("pickup")) {
+            //if (input.toLowerCase().startsWith("pickup")) {
 
-                String[] parts = input.split(" ", 2);
+              //  String[] parts = input.split(" ", 2);
 
-                if (parts.length < 2) {
-                    System.out.println("Pick up what");
-                } else {
-                    player.pickupItem(parts[1].trim());
-                }
+                //if (parts.length < 2) {
+                  //  System.out.println("Pick up what");
+                //} else {
+                 //   player.pickupItem(parts[1].trim());
+                //}
 
-                continue;
-            }
+                //continue;
+            //}
 
             // EQUIP ITEM
-            if (input.toLowerCase().startsWith("equip")) {
+            /*if (input.toLowerCase().startsWith("equip")) {
 
                 String[] parts = input.split(" ", 2);
 
@@ -161,9 +169,10 @@ public class Main {
 
                 continue;
             }
+            */
 
             // UNEQUIP ITEM
-            if (input.toLowerCase().startsWith("unequip")) {
+            /*if (input.toLowerCase().startsWith("unequip")) {
 
                 String[] parts = input.split(" ", 2);
 
@@ -175,10 +184,11 @@ public class Main {
 
                 continue;
             }
+            */
 
 
             // DROP ITEM
-            if (input.toLowerCase().startsWith("drop")) {
+            /*if (input.toLowerCase().startsWith("drop")) {
 
                 String[] parts = input.split(" ", 2);
 
@@ -189,20 +199,21 @@ public class Main {
                 }
 
                 continue;
-            }
+            }*/
 
 
             // Inventory Command
-            if (input.equalsIgnoreCase("inventory") ||
+            /*if (input.equalsIgnoreCase("inventory") ||
                     input.equalsIgnoreCase("inv")) {
 
                 player.showInventory();
                 continue;
             }
+            */
 
 
             // INSPECT ITEM
-            if (input.toLowerCase().startsWith("inspect")) {
+            /*if (input.toLowerCase().startsWith("inspect")) {
 
                 String[] parts = input.split(" ", 2);
                 if (parts.length < 2) {
@@ -211,11 +222,11 @@ public class Main {
                     player.inspectItem(parts[1].trim());
                 }
                 continue;
-            }
+            }*/
 
 
             // USE ITEM
-            if (input.toLowerCase().startsWith("use")) {
+            /*if (input.toLowerCase().startsWith("use")) {
 
                 String[] parts = input.split(" ", 2);
 
@@ -229,27 +240,28 @@ public class Main {
 
                 continue;
             }
+            */
 
 
             // Look
-            if (input.equalsIgnoreCase("look") || input.equalsIgnoreCase("explore")) {
+            /*if (input.equalsIgnoreCase("look") || input.equalsIgnoreCase("explore")) {
                 player.lookAround();
                 continue;
-            }
+            }*/
 
             // Check Stats
-            if (input.equalsIgnoreCase("check stats") ||
+            /*if (input.equalsIgnoreCase("check stats") ||
                     input.equalsIgnoreCase("stats") ||
                     input.equalsIgnoreCase("check")) {
 
                 player.showStats();
                 continue;
-            }
+            }*/
 
             // --- Puzzle and Combat Commands ---
 
             // INTERACT start puzzle logic
-            if (input.equalsIgnoreCase("interact")) {
+            /*if (input.equalsIgnoreCase("interact")) {
                 player.interactWithPuzzle(in);
 
                 // Check if the puzzle gave a reward
@@ -290,10 +302,10 @@ public class Main {
                 }
 
                 continue;
-            }
+            }*/
 
             // ENGAGE start combat with monsters in this room
-            if (input.equalsIgnoreCase("engage")) {
+            /*if (input.equalsIgnoreCase("engage")) {
 
                 if (!currentRoom.hasActiveMonsters()) {
                     System.out.println("There are no monsters here to engage");
@@ -306,11 +318,11 @@ public class Main {
                 // After combat ends either player is dead or monsters are gone
                 // If player survived loop continues
                 continue;
-            }
+            }*/
 
 
             // --- Movement Command ---
-            String dir = parseDirection(input);
+            /*
             if (dir != null) {
                 String destId = currentRoom.getExit(dir); // Get the room ID for that direction
 
@@ -331,10 +343,10 @@ public class Main {
                     }
                 }
                 continue;
-            }
+            }*/
 
 
-            System.out.println("Unknown command Type HELP");
+            //System.out.println("Unknown command Type HELP");
         }
 
         in.close(); // Close the Scanner when the game ends
@@ -343,6 +355,30 @@ public class Main {
     // --------------------------
     // HELPER METHODS
     // --------------------------
+    
+    //Moving Movement to it's own method. 
+    public static void playerMovement(String dir) {
+    	if (dir != null) {
+            String destId = currentRoom.getExit(dir); // Get the room ID for that direction
+
+            if (destId == null) {
+                System.out.println("You cant go that way");
+            } else {
+                Room next = m.rooms.get(destId);
+                if (next != null) {
+                    currentRoom = next; // Update the current room variable
+                    player.setCurrentRoom(next); // Tell the player object they moved
+
+                    // Spawn monsters for the new room
+                    m.spawnMonstersForRoom(currentRoom);
+
+                    System.out.println("You move " + dir + "");
+                } else {
+                    System.out.println("Room " + destId + " is missing");
+                }
+            }
+        }
+    }
 
     // Direction parser This is a neat trick using a switch expression
     private static String parseDirection(String input) {
@@ -459,7 +495,7 @@ public class Main {
     }
 
     // Turn-based combat loop This is a massive method
-    private void startCombat(Scanner in, Player player, Room room) {
+    public void startCombat(Scanner in, Player player, Room room) {
 
         java.util.List<Monster> enemies = new java.util.ArrayList<>(room.getActiveMonsters());
         if (enemies.isEmpty()) {
@@ -840,5 +876,23 @@ public class Main {
         } catch (Exception e) {
             System.out.println("ERROR loading artifacts: " + e.getMessage());
         }
+    }
+    //These blocks are so that we can get the Objects from main.
+    //To be able to interact with them remotely.
+    public static void stopRunning() {
+    	running = false;
+    }
+    public static Player getPlayerOBJ() {
+    	return player;
+    }
+    public static Room getCurrRm() {
+    	return currentRoom;
+    }
+    public static Main getMainObj() {
+    	return m;
+    }
+    public Map<String, Item> getArtifacts(){
+		return artifacts;
+    	
     }
 }

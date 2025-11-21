@@ -1,4 +1,6 @@
 //Tuan Nguyen
+package mainGame;
+
 public class Item {
 
     private int itmID;

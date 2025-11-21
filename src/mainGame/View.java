@@ -1,4 +1,6 @@
 // Evert Guzman
+package mainGame;
+
 public class View {
 	static int currView;
 	static String message = "";

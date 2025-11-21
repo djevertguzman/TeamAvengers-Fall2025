@@ -1,7 +1,9 @@
 //Evert Guzman
+package mainGame;
+
 import java.util.Scanner;
 
-public class Controller {
+public class DeadController {
 	private static Scanner usrkey = new Scanner(System.in);
 	private static int ContextSet;
 	public static void switchControllerContext(int x) {
