@@ -10,17 +10,20 @@ import mainGame.Room;
 public class Controller {
 	private static int context;
 	private static Scanner usrInput = new Scanner(System.in);
-	static Room currentRoom = Main.getCurrRm();
-	static Player currPlayer = Main.getPlayerOBJ();
+	//static Room currentRoom = Main.getCurrRm();
+	//static Player currPlayer = Main.getPlayerOBJ();
 	static Main m = Main.getMainObj();
 
 	public static void getUSRInput() {
 		switch (context) {
 		case 0:
 			navigationSet();
+			break;
 		case 1:
+			combatSet();
 			break;
 		case 2:
+			puzzleSet();
 			break;
 		case 3:
 			break;
@@ -30,28 +33,36 @@ public class Controller {
 	}
 
 	private static void navigationSet() {
+		Room currentRoom = Main.getCurrRm();
+		Player currPlayer  = Main.getPlayerOBJ();
+		System.out.println("Navigation Command Set");
 		System.out.print("\n> ");
 		String currInput = usrInput.nextLine().trim();
-		currInput = currInput.toLowerCase();
-		switch (currInput) {
+		String lower = currInput.toLowerCase();
+		String verb;
+		String arg;
+		String[] parts = lower.split(" ", 2);
+		verb = parts[0];
+		arg = (parts.length > 1 ? parts[1] : null);
+		switch (verb) {
 		case "n", "north", "go n", "go north" -> {
-			Main.playerMovement("N");
+			m.playerMovement("N");
 			break;
 		}
 		case "e", "east", "go e", "go east" -> {
-			Main.playerMovement("E");
+			m.playerMovement("E");
 			break;
 		}
 		case "s", "south", "go s", "go south" -> {
-			Main.playerMovement("S");
+			m.playerMovement("S");
 			break;
 		}
 		case "w", "west", "go w", "go west" -> {
-			Main.playerMovement("W");
+			m.playerMovement("W");
 			break;
 		}
 		case "pickup" -> {
-			String[] parts = currInput.split(" ", 2);
+			//String[] parts = currInput.split(" ", 2);
 
 			if (parts.length < 2) {
 				System.out.println("Pick up what");
@@ -62,7 +73,7 @@ public class Controller {
 			break;
 		}
 		case "equip" -> {
-			String[] parts = currInput.split(" ", 2);
+			//String[] parts = currInput.split(" ", 2);
 			if (parts.length < 2) {
 				System.out.println("Equip what");
 			} else {
@@ -72,7 +83,7 @@ public class Controller {
 			break;
 		}
 		case "unequip" -> {
-			String[] parts = currInput.split(" ", 2);
+			//String[] parts = currInput.split(" ", 2);
 
 			if (parts.length < 2) {
 				System.out.println("Unequip what");
@@ -83,7 +94,7 @@ public class Controller {
 			break;
 		}
 		case "drop" -> {
-			String[] parts = currInput.split(" ", 2);
+			//String[] parts = currInput.split(" ", 2);
 
 			if (parts.length < 2) {
 				System.out.println("Drop what");
@@ -98,7 +109,7 @@ public class Controller {
 			break;
 		}
 		case "inspect" -> {
-			String[] parts = currInput.split(" ", 2);
+			//String[] parts = currInput.split(" ", 2);
 			if (parts.length < 2) {
 				System.out.println("Inspect what");
 			} else {
@@ -107,7 +118,7 @@ public class Controller {
 			break;
 		}
 		case "use" -> {
-			String[] parts = currInput.split(" ", 2);
+			//String[] parts = currInput.split(" ", 2);
 
 			if (parts.length < 2) {
 				System.out.println("Use what");
@@ -169,14 +180,13 @@ public class Controller {
 
 			break;
 		}
-		case "enguage" -> {
+		case "engage" -> {
 			if (!currentRoom.hasActiveMonsters()) {
 				System.out.println("There are no monsters here to engage");
 				break;
 			}
 
 			// Start a combat sequence (turn-based)
-			// Null was "in" setting to null correcting another issue.
 			m.startCombat(usrInput, currPlayer, currentRoom);
 
 			// After combat ends either player is dead or monsters are gone
@@ -202,7 +212,83 @@ public class Controller {
 		}
 		}
 	}
+	private static void combatSet() {
+		Room currentRoom = Main.getCurrRm();
+		Player currPlayer  = Main.getPlayerOBJ();
+		System.out.println("Combat Command Set");
+		System.out.print("\n> ");
+		String currInput = usrInput.nextLine().trim();
+		currInput = currInput.toLowerCase();
+		switch (currInput) {
+		
+		
+		//This is going to be broken, we are not parsing the rest of the command.
+		// This is on the TODO.
+		case "use" -> {
+			String[] parts = currInput.split(" ", 2);
+            if (parts.length < 2) {
+                System.out.println("Use what");
+                break;
+            }
+            String itemName = parts[1].trim();
+            currPlayer.useItem(itemName, m.getArtifacts());  // uses your existing logic
 
+            // After player action monsters attack
+            m.monsterAttackTurn(currPlayer, m.getEnemiesList());
+
+            if (currPlayer.getHp() <= 0) {
+                System.out.println("You have been slain");
+                m.stopCombatLoop();
+            }
+
+            break;
+		}
+		case "attack" -> {
+			Main.startAttack();
+		}
+		case "inventory","inv" -> {
+			currPlayer.showInventory();
+            break;
+		}
+		case "stats","check","check stats" -> {
+			currPlayer.showStats();
+            break;
+		}
+		case "help" ->{
+			System.out.println("""
+                    Combat Commands:
+                      ATTACK              - attack the first monster
+                      USE <itemName>      - use a consumable from inventory
+                      STATS / CHECK       - show your stats
+                      INVENTORY / INV     - list your items
+                      QUIT / EXIT         - quit the game
+                    """);
+			break;
+		}
+		//This is to catch all possible navigation commands.
+		case "n", "north", "go n", "go north", "s", "south", "go s", "go south","e", "east", "go e", "go east","w", "west", "go w", "go west" -> {
+			System.out.println("You cannot move while in combat");
+			break;
+		}
+		case "exit", "quit" -> {
+			// From the main while loop, will have to be implemented externally.
+			Main.stopRunning();
+			System.out.println("Goodbye");
+			break;
+		}
+		case "" -> {
+			System.out.println("Unknown combat command Type HELP");
+			break;
+		}
+		default -> {
+			System.out.println("Unknown combat command Type HELP");
+			break;
+		}
+		}
+	}
+	public static void puzzleSet() {
+		
+	}
 	public int getContext() {
 		return context;
 	}

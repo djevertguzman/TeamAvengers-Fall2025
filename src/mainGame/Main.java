@@ -20,6 +20,9 @@ public class Main {
     static Player player = new Player("Player");
     static Room currentRoom;
     static Main m;
+    static Boolean remoteAttackCommand = false;
+    static java.util.List<Monster> enemies;
+    boolean inCombat;
 
     // --------------------------
     // MAIN METHOD This is where the program starts
@@ -71,8 +74,10 @@ public class Main {
         // GAME LOOP This runs until the player quits or dies
         // -------------------------------------------------------
         while (running) {
-        	String playDir = null;
+        	//Scream Test No idea why i set this. 
+        	//String playDir = null;
             // Print room info at the start of every turn
+        	Controller.switchContext(0);
             System.out.println("\n== " + currentRoom.getRoomName() + " ==");
             System.out.println(currentRoom.getRoomDesc());
 
@@ -120,7 +125,6 @@ public class Main {
                 System.out.println("There are no exits here");
             }
             
-            Controller.switchContext(0);
             Controller.getUSRInput();
 
             // Input prompt
@@ -349,7 +353,7 @@ public class Main {
             //System.out.println("Unknown command Type HELP");
         }
 
-        in.close(); // Close the Scanner when the game ends
+        //in.close(); // Close the Scanner when the game ends
     }
 
     // --------------------------
@@ -357,7 +361,7 @@ public class Main {
     // --------------------------
     
     //Moving Movement to it's own method. 
-    public static void playerMovement(String dir) {
+    public void playerMovement(String dir) {
     	if (dir != null) {
             String destId = currentRoom.getExit(dir); // Get the room ID for that direction
 
@@ -379,8 +383,9 @@ public class Main {
             }
         }
     }
-
+    //This can be tossed after moving dependences to controller.
     // Direction parser This is a neat trick using a switch expression
+    /*
     private static String parseDirection(String input) {
         String cmd = input.trim().toUpperCase();
 
@@ -391,7 +396,7 @@ public class Main {
             case "W", "WEST", "GO W", "GO WEST" -> "W";
             default -> null; // Return null if it is not a direction command
         };
-    }
+    }*/
 
     // Helper resolve item by ID or name then give to player or room floor
     private void giveItemToPlayerOrRoom(String rewardIdOrName,
@@ -496,17 +501,18 @@ public class Main {
 
     // Turn-based combat loop This is a massive method
     public void startCombat(Scanner in, Player player, Room room) {
-
-        java.util.List<Monster> enemies = new java.util.ArrayList<>(room.getActiveMonsters());
+        enemies = new java.util.ArrayList<>(room.getActiveMonsters());
+        //Setting up remote handling;
+        Controller.switchContext(1);
         if (enemies.isEmpty()) {
             System.out.println("There are no monsters to fight");
             return;
         }
 
-        boolean inCombat = true;
+        inCombat = true;
 
         while (inCombat) {
-
+        	Boolean attack = false;
             // Show basic combat status
             System.out.println("\n--- Combat ---");
             System.out.println("Your HP: " + player.getHp());
@@ -519,23 +525,25 @@ public class Main {
             }
 
             System.out.print("\nCombat command (attack/use/stats/inventory/help): ");
-            String cmd = in.nextLine().trim();
-
+            //Calling the controller to handle user input.
+            Controller.getUSRInput();
+            //String cmd = in.nextLine().trim();
             // No movement in combat
-            String dirTest = parseDirection(cmd);
-            if (dirTest != null) {
-                System.out.println("You cannot move while in combat");
-                continue;
-            }
+            //String dirTest = parseDirection(cmd);
+            //if (dirTest != null) {
+                //System.out.println("You cannot move while in combat");
+                //continue;
+            //}
 
             // Quit game entirely (optional)
-            if (cmd.equalsIgnoreCase("quit") || cmd.equalsIgnoreCase("exit")) {
+            /*if (cmd.equalsIgnoreCase("quit") || cmd.equalsIgnoreCase("exit")) {
                 System.out.println("You give up your fight");
                 System.exit(0);
             }
+            */
 
             // Help (combat)
-            if (cmd.equalsIgnoreCase("help")) {
+            /*if (cmd.equalsIgnoreCase("help")) {
                 System.out.println("""
                         Combat Commands:
                           ATTACK              - attack the first monster
@@ -545,27 +553,27 @@ public class Main {
                           QUIT / EXIT         - quit the game
                         """);
                 continue;
-            }
+            }*/
 
             // Stats
-            if (cmd.equalsIgnoreCase("stats") ||
+            /*if (cmd.equalsIgnoreCase("stats") ||
                     cmd.equalsIgnoreCase("check") ||
                     cmd.equalsIgnoreCase("check stats")) {
 
                 player.showStats();
                 continue;
-            }
+            }*/
 
             // Inventory
-            if (cmd.equalsIgnoreCase("inventory") ||
+            /*if (cmd.equalsIgnoreCase("inventory") ||
                     cmd.equalsIgnoreCase("inv")) {
 
                 player.showInventory();
                 continue;
-            }
+            }*/
 
             // USE item in combat (healing etc)
-            if (cmd.toLowerCase().startsWith("use")) {
+            /*if (cmd.toLowerCase().startsWith("use")) {
                 String[] parts = cmd.split(" ", 2);
                 if (parts.length < 2) {
                     System.out.println("Use what");
@@ -583,11 +591,13 @@ public class Main {
                 }
 
                 continue;
-            }
+            }*/
 
             // ATTACK (simple always attack the first monster in the list)
-            if (cmd.equalsIgnoreCase("attack")) {
-
+            //Implemented a method to remotely trigger attack.
+            // Will probably have issues, more testing will be required.
+            if (remoteAttackCommand) {
+            	remoteAttackCommand = false;
                 Monster target = enemies.get(0);
 
                 int dmg = player.getAttack();
@@ -634,12 +644,11 @@ public class Main {
                 continue;
             }
 
-            System.out.println("Unknown combat command Type HELP");
         }
     }
 
     // Monsters attack the player
-    private void monsterAttackTurn(Player player, java.util.List<Monster> enemies) {
+    public void monsterAttackTurn(Player player, java.util.List<Monster> enemies) {
 
         for (Monster m : enemies) {
             int dmg = m.getAttack();
@@ -893,6 +902,14 @@ public class Main {
     }
     public Map<String, Item> getArtifacts(){
 		return artifacts;
-    	
+    }
+    public static void startAttack() {
+    	remoteAttackCommand = true;
+    }
+    public java.util.List<Monster> getEnemiesList(){
+    	return enemies;
+    }
+    public void stopCombatLoop() {
+    	inCombat = false;
     }
 }
