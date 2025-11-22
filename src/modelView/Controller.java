@@ -23,14 +23,14 @@ public class Controller {
 			combatSet();
 			break;
 		default:
-			System.out.println("Error Incorrect View Called");
+			View.setMessage("Error Incorrect View Called");
 		}
 	}
 
 	private static void navigationSet() {
 		Room currentRoom = Main.getCurrRm();
 		Player currPlayer  = Main.getPlayerOBJ();
-		System.out.println("Navigation Command Set");
+		View.setMessage("Navigation Command Set");
 		System.out.print("\n> ");
 		String currInput = usrInput.nextLine().trim();
 		String lower = currInput.toLowerCase();
@@ -38,19 +38,19 @@ public class Controller {
 		String[] parts = lower.split(" ", 2);
 		verb = parts[0];
 		switch (verb) {
-		case "n", "north", "go n", "go north" -> {
+		case "n", "north" -> {
 			m.playerMovement("N");
 			break;
 		}
-		case "e", "east", "go e", "go east" -> {
+		case "e", "east" -> {
 			m.playerMovement("E");
 			break;
 		}
-		case "s", "south", "go s", "go south" -> {
+		case "s", "south" -> {
 			m.playerMovement("S");
 			break;
 		}
-		case "w", "west", "go w", "go west" -> {
+		case "w", "west" -> {
 			m.playerMovement("W");
 			break;
 		}
@@ -58,7 +58,7 @@ public class Controller {
 			//String[] parts = currInput.split(" ", 2);
 
 			if (parts.length < 2) {
-				System.out.println("Pick up what");
+				View.setMessage("Pick up what");
 			} else {
 				Main.getPlayerOBJ().pickupItem(parts[1].trim());
 			}
@@ -68,7 +68,7 @@ public class Controller {
 		case "equip" -> {
 			//String[] parts = currInput.split(" ", 2);
 			if (parts.length < 2) {
-				System.out.println("Equip what");
+				View.setMessage("Equip what");
 			} else {
 				currPlayer.equipItem(parts[1].trim());
 			}
@@ -79,7 +79,7 @@ public class Controller {
 			//String[] parts = currInput.split(" ", 2);
 
 			if (parts.length < 2) {
-				System.out.println("Unequip what");
+				View.setMessage("Unequip what");
 			} else {
 				currPlayer.unequipItem(parts[1].trim());
 			}
@@ -90,7 +90,7 @@ public class Controller {
 			//String[] parts = currInput.split(" ", 2);
 
 			if (parts.length < 2) {
-				System.out.println("Drop what");
+				View.setMessage("Drop what");
 			} else {
 				currPlayer.dropItem(parts[1].trim());
 			}
@@ -104,7 +104,7 @@ public class Controller {
 		case "inspect" -> {
 			//String[] parts = currInput.split(" ", 2);
 			if (parts.length < 2) {
-				System.out.println("Inspect what");
+				View.setMessage("Inspect what");
 			} else {
 				currPlayer.inspectItem(parts[1].trim());
 			}
@@ -114,7 +114,7 @@ public class Controller {
 			//String[] parts = currInput.split(" ", 2);
 
 			if (parts.length < 2) {
-				System.out.println("Use what");
+				View.setMessage("Use what");
 			} else {
 				// We have to pass artifacts so the player class can look up reward items
 				currPlayer.useItem(parts[1].trim(), m.getArtifacts());
@@ -159,15 +159,14 @@ public class Controller {
 					// Check inventory limit (15)
 					if (currPlayer.getInventory().size() < 15) {
 						currPlayer.addItem(rewardItem);
-						System.out.println("You received: " + rewardItem.getName());
+						View.setMessage("You received: " + rewardItem.getName());
 					} else {
 						// Put item in room instead
 						currentRoom.getRoomInventory().addItem(rewardItem);
-						System.out
-								.println("Your inventory is full " + rewardItem.getName() + " was placed in the room");
+						View.setMessage("Your inventory is full " + rewardItem.getName() + " was placed in the room");
 					}
 				} else {
-					System.out.println("WARNING Reward item '" + rewardId + "' not found in Artifactstxt");
+					View.setMessage("WARNING Reward item '" + rewardId + "' not found in Artifactstxt");
 				}
 			}
 
@@ -175,7 +174,7 @@ public class Controller {
 		}
 		case "engage" -> {
 			if (!currentRoom.hasActiveMonsters()) {
-				System.out.println("There are no monsters here to engage");
+				View.setMessage("There are no monsters here to engage");
 				break;
 			}
 
@@ -197,18 +196,18 @@ public class Controller {
 			break;
 		}
 		case "" -> {
-			System.out.println("Unknown command Type HELP");
+			View.setMessage("Unknown command Type HELP");
 			break;
 		}
 		default -> {
-			System.out.println("Unknown command Type HELP");
+			View.setMessage("Unknown command Type HELP");
 		}
 		}
 	}
 	private static void combatSet() {
 		Room currentRoom = Main.getCurrRm();
 		Player currPlayer  = Main.getPlayerOBJ();
-		System.out.println("Combat Command Set");
+		View.setMessage("Combat Command Set");
 		System.out.print("\n> ");
 		String currInput = usrInput.nextLine().trim();
 		currInput = currInput.toLowerCase();
@@ -220,7 +219,7 @@ public class Controller {
 		case "use" -> {
 			String[] parts = currInput.split(" ", 2);
             if (parts.length < 2) {
-                System.out.println("Use what");
+            	View.setMessage("Use what");
                 break;
             }
             String itemName = parts[1].trim();
@@ -230,7 +229,7 @@ public class Controller {
             m.monsterAttackTurn(currPlayer, m.getEnemiesList());
 
             if (currPlayer.getHp() <= 0) {
-                System.out.println("You have been slain");
+            	View.setMessage("You have been slain");
                 m.stopCombatLoop();
             }
 
@@ -248,7 +247,7 @@ public class Controller {
             break;
 		}
 		case "help" ->{
-			System.out.println("""
+			View.setMessage("""
                     Combat Commands:
                       ATTACK              - attack the first monster
                       USE <itemName>      - use a consumable from inventory
@@ -260,7 +259,7 @@ public class Controller {
 		}
 		//This is to catch all possible navigation commands.
 		case "n", "north", "go n", "go north", "s", "south", "go s", "go south","e", "east", "go e", "go east","w", "west", "go w", "go west" -> {
-			System.out.println("You cannot move while in combat");
+			View.setMessage("You cannot move while in combat");
 			break;
 		}
 		case "exit", "quit" -> {
@@ -270,11 +269,11 @@ public class Controller {
 			break;
 		}
 		case "" -> {
-			System.out.println("Unknown combat command Type HELP");
+			View.setMessage("Unknown combat command Type HELP");
 			break;
 		}
 		default -> {
-			System.out.println("Unknown combat command Type HELP");
+			View.setMessage("Unknown combat command Type HELP");
 			break;
 		}
 		}

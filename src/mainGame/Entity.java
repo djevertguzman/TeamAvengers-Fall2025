@@ -1,6 +1,8 @@
 // Gabriel Peart & Evert Guzman
 package mainGame;
 
+import modelView.View;
+
 public class Entity {
 
     // These variables are PROTECTED so that classes like Player and Monster
@@ -43,7 +45,8 @@ public class Entity {
 
         if (hp < 0) hp = 0; // Clamp HP to 0 again just to be safe
 
-        System.out.println(name + " takes " + reducedDamage + " damage Remaining HP: " + hp);
+        //System.out.println(name + " takes " + reducedDamage + " damage Remaining HP: " + hp);
+        View.setMessage(name + " takes " + reducedDamage + " damage Remaining HP: " + hp);
     }
 
     // A simple check to see if the entity is still alive

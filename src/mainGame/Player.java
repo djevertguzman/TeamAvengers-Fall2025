@@ -4,6 +4,8 @@ package mainGame;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import modelView.View;
+
 // The Player class extends Entity so it gets base HP and Attack stats
 public class Player extends Entity {
 
@@ -43,17 +45,22 @@ public class Player extends Entity {
             return;
         }
 
-        System.out.println("You look around carefully");
+        //System.out.println("You look around carefully");
+        View.setMessage("You look around carefully");
 
         // Show room name & description again
-        System.out.println("\n== " + currentRoom.getRoomName() + " ==");
-        System.out.println(currentRoom.getRoomDesc());
+        //System.out.println("\n== " + currentRoom.getRoomName() + " ==");
+        //System.out.println(currentRoom.getRoomDesc());
+        View.setMessage("\n== " + currentRoom.getRoomName() + " ==");
+        View.setMessage(currentRoom.getRoomDesc());
 
         // Check if there are items to pick up
         if (currentRoom.hasItems()) {
-            System.out.println("You see some items in this room:");
+            //System.out.println("You see some items in this room:");
+        	View.setMessage("You see some items in this room:");
             for (Item it : currentRoom.getRoomInventory().getAllItems()) {
-                System.out.println(" - " + it.getName());
+                //System.out.println(" - " + it.getName());
+            	View.setMessage(" - " + it.getName());
             }
         }
 
@@ -62,12 +69,15 @@ public class Player extends Entity {
 
             // Puzzle not completed
             if (!currentRoom.getPuzzle().isCompleted()) {
-                System.out.println("There is a puzzle in this room");
-                System.out.println("Type 'interact' to begin solving it");
+                //System.out.println("There is a puzzle in this room");
+                //System.out.println("Type 'interact' to begin solving it");
+            	View.setMessage("There is a puzzle in this room");
+                View.setMessage("Type 'interact' to begin solving it");
             }
             // Puzzle already completed
             else {
-                System.out.println("The puzzle in this room has already been completed");
+                //System.out.println("The puzzle in this room has already been completed");
+            	View.setMessage("The puzzle in this room has already been completed");
 
                 // If the room has active monsters (spawned pack)
                 if (currentRoom.hasActiveMonsters()) {
@@ -75,8 +85,10 @@ public class Player extends Entity {
 
                     if (!pack.isEmpty()) {
                         String monsterName = pack.get(0).getName(); // same type in pack
-                        System.out.println("You see " + pack.size() + " " + monsterName + "(s) lurking here");
-                        System.out.println("Type 'engage' to begin combat");
+                        //System.out.println("You see " + pack.size() + " " + monsterName + "(s) lurking here");
+                        //System.out.println("Type 'engage' to begin combat");
+                        View.setMessage("You see " + pack.size() + " " + monsterName + "(s) lurking here");
+                        View.setMessage("Type 'engage' to begin combat");
                     }
                 }
             }
@@ -121,32 +133,43 @@ public class Player extends Entity {
         int reduced = Math.max(0, damage - armor); // Armor reduces damage but minimum damage taken is 0
         hp -= reduced;
         if (hp < 0) hp = 0; // Cant go below zero HP
-        System.out.println(name + " takes " + reduced + " damage Remaining HP: " + hp);
+        //System.out.println(name + " takes " + reduced + " damage Remaining HP: " + hp);
+        View.setMessage(name + " takes " + reduced + " damage Remaining HP: " + hp);
     }
 
     // Displays the players current stats and equipped gear
     public void showStats() {
-        System.out.println("\n--- Player Stats ---");
-        System.out.println("HP: " + getHp() + " / " + getTotalMaxHP());
-        System.out.println("Armor: " + getArmor());
-        System.out.println("Attack: " + getTotalAttack());
+        //System.out.println("\n--- Player Stats ---");
+        //System.out.println("HP: " + getHp() + " / " + getTotalMaxHP());
+        //System.out.println("Armor: " + getArmor());
+        //System.out.println("Attack: " + getTotalAttack());
+    	View.setMessage("\n--- Player Stats ---");
+    	View.setMessage("HP: " + getHp() + " / " + getTotalMaxHP());
+    	View.setMessage("Armor: " + getArmor());
+    	View.setMessage("Attack: " + getTotalAttack());
 
         // Equipped Weapon
         if (equippedWeapon != null) {
             Item w = equippedWeapon;
-            System.out.println("Weapon: " + w.getName() +
+            /*System.out.println("Weapon: " + w.getName() +
+                    " (+" + w.getAugDmg() + " DMG)");*/
+            View.setMessage("Weapon: " + w.getName() +
                     " (+" + w.getAugDmg() + " DMG)");
         } else {
-            System.out.println("Weapon: None Equipped");
+            //System.out.println("Weapon: None Equipped");
+        	View.setMessage("Weapon: None Equipped");
         }
 
         // Equipped Armor
         if (equippedArmor != null) {
             Item a = equippedArmor;
-            System.out.println("Equipment: " + a.getName() +
+            /*System.out.println("Equipment: " + a.getName() +
+                    " (+" + a.getItemHp() + " HP)");*/
+            View.setMessage("Equipment: " + a.getName() +
                     " (+" + a.getItemHp() + " HP)");
         } else {
-            System.out.println("Equipment: None Equipped");
+            //System.out.println("Equipment: None Equipped");
+        	View.setMessage("Equipment: None Equipped");
         }
     }
 
@@ -181,44 +204,47 @@ public class Player extends Entity {
     // Lists all items currently in the players inventory
     public void showInventory() {
         if (inventory.isEmpty()) {
-            System.out.println("You are not carrying any items");
+            //System.out.println("You are not carrying any items");
+        	View.setMessage("You are not carrying any items");
             return;
         }
 
-        System.out.println("\n--- Inventory ---");
+        //System.out.println("\n--- Inventory ---");
+        View.setMessage("\n--- Inventory ---");
         for (Item it : inventory) {
-            System.out.println(" - " + it.getName() + " (" + it.getType() + ")");
+            //System.out.println(" - " + it.getName() + " (" + it.getType() + ")");
+            View.setMessage(" - " + it.getName() + " (" + it.getType() + ")");
         }
     }
 
     // INSPECT ITEM
     public void inspectItem(String itemName) {
         if (itemName == null || itemName.isEmpty()) {
-            System.out.println("Please specify an item to inspect");
+        	View.setMessage("Please specify an item to inspect");
             return;
         }
 
         Item i = findItemByName(itemName);
 
         if (i == null) {
-            System.out.println("That item is not in your inventory");
+        	View.setMessage("That item is not in your inventory");
             return;
         }
 
-        System.out.println("\n--- Item Details ---");
-        System.out.println("Name: " + i.getName());
-        System.out.println("Type: " + i.getType());
-        System.out.println("Description: " + i.getDescription());
+        View.setMessage("\n--- Item Details ---");
+        View.setMessage("Name: " + i.getName());
+        View.setMessage("Type: " + i.getType());
+        View.setMessage("Description: " + i.getDescription());
 
         // Optional show stats only if item has them
         if (i.getAugDmg() > 0) {
-            System.out.println("Damage Bonus: +" + i.getAugDmg());
+        	View.setMessage("Damage Bonus: +" + i.getAugDmg());
         }
         if (i.getAugHP() > 0) {
-            System.out.println("Heal Amount: +" + i.getAugHP() + " HP");
+        	View.setMessage("Heal Amount: +" + i.getAugHP() + " HP");
         }
         if (i.getItemHp() > 0) {
-            System.out.println("Armor/HP Bonus: +" + i.getItemHp());
+        	View.setMessage("Armor/HP Bonus: +" + i.getItemHp());
         }
     }
 
@@ -226,12 +252,12 @@ public class Player extends Entity {
     public void pickupItem(String itemName) {
 
         if (itemName == null || itemName.isEmpty()) {
-            System.out.println("Pick up what");
+        	View.setMessage("Pick up what");
             return;
         }
 
         if (currentRoom == null) {
-            System.out.println("You are not in a room");
+        	View.setMessage("You are not in a room");
             return;
         }
 
@@ -242,13 +268,13 @@ public class Player extends Entity {
         Item item = roomInv.getItem(itemName);
 
         if (item == null) {
-            System.out.println("That item is not here");
+        	View.setMessage("That item is not here");
             return;
         }
 
         // Check inventory limit
         if (inventory.size() >= 15) {
-            System.out.println("Your inventory is full");
+        	View.setMessage("Your inventory is full");
             return;
         }
 
@@ -256,19 +282,19 @@ public class Player extends Entity {
         roomInv.deleteItem(itemName);
         inventory.add(item);
 
-        System.out.println("You picked up: " + item.getName());
+        View.setMessage("You picked up: " + item.getName());
     }
 
     // DROP ITEM INTO ROOM
     public void dropItem(String itemName) {
 
         if (itemName == null || itemName.isEmpty()) {
-            System.out.println("Drop what");
+        	View.setMessage("Drop what");
             return;
         }
 
         if (currentRoom == null) {
-            System.out.println("You are not in a room");
+        	View.setMessage("You are not in a room");
             return;
         }
 
@@ -276,18 +302,18 @@ public class Player extends Entity {
         Item i = findItemByName(itemName);
 
         if (i == null) {
-            System.out.println("You dont have that item");
+        	View.setMessage("You dont have that item");
             return;
         }
 
         // If item is equipped prevent accidental drop
         if (i == equippedWeapon) {
-            System.out.println("You cannot drop your currently equipped weapon");
+        	View.setMessage("You cannot drop your currently equipped weapon");
             return;
         }
 
         if (i == equippedArmor) {
-            System.out.println("You cannot drop your currently equipped armor");
+        	View.setMessage("You cannot drop your currently equipped armor");
             return;
         }
 
@@ -295,7 +321,7 @@ public class Player extends Entity {
         inventory.remove(i);
         currentRoom.getRoomInventory().addItem(i);
 
-        System.out.println("You dropped: " + i.getName());
+        View.setMessage("You dropped: " + i.getName());
     }
 
     // -----------------------------
@@ -316,7 +342,7 @@ public class Player extends Entity {
     public void equipWeapon(Item weapon) {
         if (weapon != null && weapon.getType().equalsIgnoreCase("Weapon")) {
             this.equippedWeapon = weapon;
-            System.out.println("You equipped: " + weapon.getName());
+            View.setMessage("You equipped: " + weapon.getName());
         }
     }
 
@@ -324,7 +350,7 @@ public class Player extends Entity {
     public void equipArmor(Item armorItem) {
         if (armorItem != null && armorItem.getType().equalsIgnoreCase("Equipment")) {
             this.equippedArmor = armorItem;
-            System.out.println("You equipped: " + armorItem.getName());
+            View.setMessage("You equipped: " + armorItem.getName());
         }
     }
 
@@ -332,7 +358,7 @@ public class Player extends Entity {
     public void equipItem(String itemName) {
 
         if (itemName == null || itemName.isEmpty()) {
-            System.out.println("Equip what");
+        	View.setMessage("Equip what");
             return;
         }
 
@@ -340,7 +366,7 @@ public class Player extends Entity {
         Item item = findItemByName(itemName);
 
         if (item == null) {
-            System.out.println("You dont have that item");
+        	View.setMessage("You dont have that item");
             return;
         }
 
@@ -353,26 +379,26 @@ public class Player extends Entity {
         // EQUIP AS WEAPON
         if (isWeapon) {
             this.equippedWeapon = item;
-            System.out.println("You equipped: " + item.getName());
+            View.setMessage("You equipped: " + item.getName());
             return;
         }
 
         // EQUIP AS ARMOR
         if (isArmor) {
             this.equippedArmor = item;
-            System.out.println("You equipped: " + item.getName());
+            View.setMessage("You equipped: " + item.getName());
             return;
         }
 
         // If item has no stats that qualify it
-        System.out.println("This item cannot be equipped");
+        View.setMessage("This item cannot be equipped");
     }
 
     // UNEQUIP ITEM
     public void unequipItem(String itemName) {
 
         if (itemName == null || itemName.isEmpty()) {
-            System.out.println("Unequip what");
+        	View.setMessage("Unequip what");
             return;
         }
 
@@ -381,14 +407,14 @@ public class Player extends Entity {
 
         // Check if this is the equipped weapon
         if (equippedWeapon != null && equippedWeapon.getName().toLowerCase().equals(name)) {
-            System.out.println("You unequipped: " + equippedWeapon.getName());
+        	View.setMessage("You unequipped: " + equippedWeapon.getName());
             equippedWeapon = null;
             return;
         }
 
         // Check if this is the equipped armor
         if (equippedArmor != null && equippedArmor.getName().toLowerCase().equals(name)) {
-            System.out.println("You unequipped: " + equippedArmor.getName());
+        	View.setMessage("You unequipped: " + equippedArmor.getName());
             equippedArmor = null;
             return;
         }
@@ -396,9 +422,9 @@ public class Player extends Entity {
         // If item is in inventory but not equipped
         Item invItem = findItemByName(itemName);
         if (invItem != null) {
-            System.out.println("That item is not currently equipped");
+        	View.setMessage("That item is not currently equipped");
         } else {
-            System.out.println("You dont have that item");
+        	View.setMessage("You dont have that item");
         }
     }
 
@@ -419,31 +445,33 @@ public class Player extends Entity {
     public void interactWithPuzzle(Scanner in) {
 
         // Get the puzzle in the players current room
+    	View.switchView(3);
         Puzzle puzzle = currentRoom.getPuzzle();
 
         // No puzzle
         if (puzzle == null) {
-            System.out.println("There is no puzzle in this room");
+        	View.setMessage("There is no puzzle in this room");
             return;
         }
 
         // Already solved
         if (puzzle.isCompleted()) {
-            System.out.println("The puzzle in this room has already been completed");
+        	View.setMessage("The puzzle in this room has already been completed");
             return;
         }
 
         // Start puzzle
-        System.out.println("\nPuzzle: " + puzzle.getPuzName());
-        System.out.println(puzzle.getQuestion());
+        View.setMessage("\nPuzzle: " + puzzle.getPuzName());
+        View.setMessage(puzzle.getQuestion());
 
-        System.out.print("Your answer: ");
+        View.setMessage("Your answer: ");
+        View.draw();
         String userAns = in.nextLine().trim();
 
         boolean correct = puzzle.userAnswer(userAns);
 
         if (correct) {
-            System.out.println("You solved the puzzle");
+        	View.setMessage("You solved the puzzle");
 
             // -----------------------------------------
             // NEW CODE Dispense Puzzle Reward
@@ -455,7 +483,7 @@ public class Player extends Entity {
                 // Store reward to a temporary variable for Main to handle later
                 this.pendingPuzzleReward = rewardId;
 
-                System.out.println("Reward available: " + rewardId);
+                View.setMessage("Reward available: " + rewardId);
             }
 
             return;
@@ -465,12 +493,12 @@ public class Player extends Entity {
         int dmg = puzzle.getPenaltyHP();
         this.takeDamage(dmg);
 
-        System.out.println("Incorrect You lose " + dmg + " HP");
-        System.out.println("Remaining HP: " + this.getHp());
+        View.setMessage("Incorrect You lose " + dmg + " HP");
+        View.setMessage("Remaining HP: " + this.getHp());
 
         // Puzzle locks if attempts exceeded (future use)
         if (puzzle.isCompleted() && puzzle.getPuzAttempt() >= puzzle.getPuzMaxAtt()) {
-            System.out.println("The puzzle locks and cannot be retried");
+        	View.setMessage("The puzzle locks and cannot be retried");
         }
 
     }
@@ -484,7 +512,7 @@ public class Player extends Entity {
     public void useItem(String itemName, java.util.Map<String, Item> artifacts) {
 
         if (itemName == null || itemName.isEmpty()) {
-            System.out.println("Use what");
+        	View.setMessage("Use what");
             return;
         }
 
@@ -492,7 +520,7 @@ public class Player extends Entity {
         Item item = findItemByName(itemName);
 
         if (item == null) {
-            System.out.println("You dont have that item");
+        	View.setMessage("You dont have that item");
             return;
         }
 
@@ -506,14 +534,14 @@ public class Player extends Entity {
             int heal = item.getAugHP();
 
             if (heal <= 0) {
-                System.out.println("This item cannot be used");
+            	View.setMessage("This item cannot be used");
                 return;
             }
 
             // Heal the player
             this.hp += heal;
-            System.out.println("You consume " + item.getName() + " and restore " + heal + " HP");
-            System.out.println("Current HP: " + this.hp);
+            View.setMessage("You consume " + item.getName() + " and restore " + heal + " HP");
+            View.setMessage("Current HP: " + this.hp);
 
             // Remove item after use
             inventory.remove(item);
@@ -530,7 +558,7 @@ public class Player extends Entity {
 
             // Does description contain target room
             if (!desc.contains("RM")) {
-                System.out.println("This item cannot be used right now");
+            	View.setMessage("This item cannot be used right now");
                 return;
             }
 
@@ -544,7 +572,7 @@ public class Player extends Entity {
             }
 
             if (unlockTarget.isEmpty()) {
-                System.out.println("This item cannot be used right now");
+            	View.setMessage("This item cannot be used right now");
                 return;
             }
 
@@ -568,7 +596,7 @@ public class Player extends Entity {
                         // Remove the lock
                         currentRoom.unlockExit(dir);
 
-                        System.out.println("You used " + item.getName() +
+                        View.setMessage("You used " + item.getName() +
                                 " The door to " + dest + " is now unlocked");
 
                         unlocked = true;
@@ -578,7 +606,7 @@ public class Player extends Entity {
             }
 
             if (!unlocked) {
-                System.out.println("This item cannot be used right now");
+            	View.setMessage("This item cannot be used right now");
                 return;
             }
 
@@ -600,9 +628,9 @@ public class Player extends Entity {
                 boolean hasLimbs = findItemByName("Doll Limbs") != null;
 
                 if (hasHead && hasTorso && hasLimbs) {
-                    System.out.println("Faint humming can be heard from Old Storage Shed");
+                	View.setMessage("Faint humming can be heard from Old Storage Shed");
                 } else {
-                    System.out.println("This item cannot be used right now");
+                	View.setMessage("This item cannot be used right now");
                 }
                 return;
             }
@@ -613,7 +641,7 @@ public class Player extends Entity {
             Item limbs = findItemByName("Doll Limbs");
 
             if (head == null || torso == null || limbs == null) {
-                System.out.println("This cannot be used without the other pieces");
+            	View.setMessage("This cannot be used without the other pieces");
                 return;
             }
 
@@ -621,7 +649,7 @@ public class Player extends Entity {
             Item motherGrief = artifacts.get("IT17");
 
             if (motherGrief == null) {
-                System.out.println("Something went wrong the fused weapon could not be created");
+            	View.setMessage("Something went wrong the fused weapon could not be created");
                 return;
             }
 
@@ -633,8 +661,8 @@ public class Player extends Entity {
             // Add new weapon
             inventory.add(motherGrief);
 
-            System.out.println("The doll pieces shudder violently");
-            System.out.println("They merge into a horrific weapon Mothers Grief");
+            View.setMessage("The doll pieces shudder violently");
+            View.setMessage("They merge into a horrific weapon Mothers Grief");
 
             return;
         }
@@ -642,7 +670,7 @@ public class Player extends Entity {
         // -------------------------------------------------------
         // 4 Not usable
         // -------------------------------------------------------
-        System.out.println("This item cannot be used");
+        View.setMessage("This item cannot be used");
     }
 
     // -----------------------------
@@ -650,7 +678,7 @@ public class Player extends Entity {
     // Prints a list of all game commands
     // -----------------------------
     public static void showHelp() {
-        System.out.println("""
+    	View.setMessage("""
             Commands:
               N / NORTH / GO N / GO NORTH
               S / SOUTH / GO S / GO SOUTH

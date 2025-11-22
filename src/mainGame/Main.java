@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import modelView.Controller;
+import modelView.View;
 
 public class Main {
 
@@ -39,9 +40,11 @@ public class Main {
 
         // Create player and start in RM1
         currentRoom = m.rooms.get("RM1"); // Always start here
-
+        View.switchView(5);
         if (currentRoom == null) {
-            System.out.println("ERROR Starting room RM1 not found");
+            //System.out.println("ERROR Starting room RM1 not found");
+        	View.setMessage("ERROR Starting room RM1 not found");
+        	View.draw();
             return;
         }
 
@@ -64,28 +67,43 @@ public class Main {
         m.spawnMonstersForRoom(currentRoom); // Check for monsters in the starting room
         //Scanner in = new Scanner(System.in); // The object used to read player input
 
-        System.out.println("=====================================");
-        System.out.println("   Welcome to Ashfall Manor");
-        System.out.println("=====================================");
-        System.out.println("Type HELP for commands\n");
+        //System.out.println("=====================================");
+        //System.out.println("   Welcome to Ashfall Manor");
+        //System.out.println("=====================================");
+        //System.out.println("Type HELP for commands\n");
 
-
+        View.setMessage("=====================================");
+        View.setMessage("   Welcome to Ashfall Manor");
+        View.setMessage("=====================================");
+        View.setMessage("Type HELP for commands\n");
+        View.draw();
+        //This is to keep the intro information up for a a second. 
+        //Before the next Draw command.
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
         // -------------------------------------------------------
         // GAME LOOP This runs until the player quits or dies
         // -------------------------------------------------------
         while (running) {
-        	//Scream Test No idea why i set this. 
-        	//String playDir = null;
             // Print room info at the start of every turn
+        	//Switching Controller Context to Navigation.
         	Controller.switchContext(0);
-            System.out.println("\n== " + currentRoom.getRoomName() + " ==");
-            System.out.println(currentRoom.getRoomDesc());
+        	//Switching View Context for Navigation.
+        	View.switchView(0);
+            //System.out.println("\n== " + currentRoom.getRoomName() + " ==");
+            //System.out.println(currentRoom.getRoomDesc());
+        	View.setMessage("\n== " + currentRoom.getRoomName() + " ==");
+        	View.setMessage(currentRoom.getRoomDesc());
 
             // Show exits This is complicated logic to show locked doors
             String[] exits = currentRoom.getAllExits();
 
             if (exits != null && exits.length > 0) {
-                System.out.println("Exits:");
+                //System.out.println("Exits:");
+            	View.setMessage("Exits:");
 
                 for (String e : exits) {
 
@@ -118,13 +136,15 @@ public class Main {
                         exitLine += " (Locked)";
                     }
 
-                    System.out.println(exitLine);
+                    //System.out.println(exitLine);
+                    View.setMessage(exitLine);
                 }
 
             } else {
-                System.out.println("There are no exits here");
+                //System.out.println("There are no exits here");
+            	View.setMessage("There are no exits here");
             }
-            
+            View.draw();
             Controller.getUSRInput();
 
         }
@@ -137,11 +157,14 @@ public class Main {
     
     //Moving Movement to it's own method. 
     public void playerMovement(String dir) {
+    	System.out.println("[debug] move " + dir + " caller: " +
+    		    new Exception().getStackTrace()[1]);
     	if (dir != null) {
             String destId = currentRoom.getExit(dir); // Get the room ID for that direction
 
             if (destId == null) {
-                System.out.println("You cant go that way");
+                //System.out.println("You cant go that way");
+            	View.setMessage("You cant go that way");
             } else {
                 Room next = m.rooms.get(destId);
                 if (next != null) {
@@ -149,11 +172,14 @@ public class Main {
                     player.setCurrentRoom(next); // Tell the player object they moved
 
                     // Spawn monsters for the new room
+                    View.switchView(0);
                     m.spawnMonstersForRoom(currentRoom);
 
-                    System.out.println("You move " + dir + "");
+                    //System.out.println("You move " + dir + "");
+                    View.setMessage("You move " + dir + "");
                 } else {
-                    System.out.println("Room " + destId + " is missing");
+                    //System.out.println("Room " + destId + " is missing");
+                    View.setMessage("Room " + destId + " is missing");
                 }
             }
         }
@@ -182,18 +208,23 @@ public class Main {
         }
 
         if (rewardItem == null) {
-            System.out.println("WARNING Reward item '" + rewardIdOrName + "' not found in Artifactstxt");
+            //System.out.println("WARNING Reward item '" + rewardIdOrName + "' not found in Artifactstxt");
+        	View.setMessage("WARNING Reward item '" + rewardIdOrName + "' not found in Artifactstxt");
             return;
         }
 
         // Try to put in player inventory
         if (player.getInventory().size() < 15) {
             player.addItem(rewardItem);
-            System.out.println("You received: " + rewardItem.getName());
+            //System.out.println("You received: " + rewardItem.getName());
+            View.setMessage("You received: " + rewardItem.getName());
         } else {
             // Inventory full -> drop on room floor
             room.getRoomInventory().addItem(rewardItem);
-            System.out.println("Your inventory is full "
+            /*System.out.println("Your inventory is full "
+                    + rewardItem.getName() + " was placed in the room");
+            */
+            View.setMessage("Your inventory is full "
                     + rewardItem.getName() + " was placed in the room");
         }
     }
@@ -254,19 +285,25 @@ public class Main {
         room.setActiveMonsters(spawned);
 
         if (!spawned.isEmpty()) {
-            System.out.println("\nYou sense danger nearby");
-            System.out.println("There are " + spawned.size() + " monster(s) lurking in this area");
-            System.out.println("Type 'engage' to begin combat");
+            //System.out.println("\nYou sense danger nearby");
+            //System.out.println("There are " + spawned.size() + " monster(s) lurking in this area");
+            //System.out.println("Type 'engage' to begin combat");
+        	View.setMessage("You sense danger nearby");
+        	View.setMessage("There are " + spawned.size() + " monster(s) lurking in this area");
+        	View.setMessage("Type 'engage' to begin combat");
         }
     }
 
     // Turn-based combat loop This is a massive method
     public void startCombat(Scanner in, Player player, Room room) {
+    	View.switchView(4);
         enemies = new java.util.ArrayList<>(room.getActiveMonsters());
         //Setting up remote handling;
         Controller.switchContext(1);
         if (enemies.isEmpty()) {
-            System.out.println("There are no monsters to fight");
+            //System.out.println("There are no monsters to fight");
+        	View.setMessage("There are no monsters to fight");
+        	View.draw();
             return;
         }
 
@@ -275,18 +312,25 @@ public class Main {
         while (inCombat) {
         	Boolean attack = false;
             // Show basic combat status
-            System.out.println("\n--- Combat ---");
-            System.out.println("Your HP: " + player.getHp());
-            System.out.println("Enemies:");
+            //System.out.println("\n--- Combat ---");
+            //System.out.println("Your HP: " + player.getHp());
+            //System.out.println("Enemies:");
+        	View.setMessage("\n--- Combat ---");
+        	View.setMessage("Your HP: " + player.getHp());
+        	View.setMessage("Enemies:");
             int idx = 1;
             for (Monster m : enemies) {
-                System.out.println("  " + idx + ") " + m.getName()
-                        + " (" + m.getHp() + " HP, " + m.getAttack() + " DMG)");
+                /*System.out.println("  " + idx + ") " + m.getName()
+                        + " (" + m.getHp() + " HP, " + m.getAttack() + " DMG)");*/
+                View.setMessage("  " + idx + ") " + m.getName()
+                + " (" + m.getHp() + " HP, " + m.getAttack() + " DMG)");
                 idx++;
             }
 
-            System.out.print("\nCombat command (attack/use/stats/inventory/help): ");
+            //System.out.print("\nCombat command (attack/use/stats/inventory/help): ");
+            View.setMessage("\nCombat command (attack/use/stats/inventory/help): ");
             //Calling the controller to handle user input.
+            View.draw();
             Controller.getUSRInput();
 
             // ATTACK (simple always attack the first monster in the list)
@@ -301,17 +345,20 @@ public class Main {
                     dmg += player.getEquippedWeapon().getAugDmg();
                 }
 
-                System.out.println("You attack " + target.getName() + " for " + dmg + " damage");
+                //System.out.println("You attack " + target.getName() + " for " + dmg + " damage");
+                View.setMessage("You attack " + target.getName() + " for " + dmg + " damage");
                 target.takeDamage(dmg);
 
                 if (target.getHp() <= 0) {
-                    System.out.println("You defeated " + target.getName() + "");
+                    //System.out.println("You defeated " + target.getName() + "");
+                	View.setMessage("You defeated " + target.getName() + "");
                     enemies.remove(0);
                 }
 
                 // If all enemies dead -> drops + end combat
                 if (enemies.isEmpty()) {
-                    System.out.println("You defeated all the monsters in this area");
+                    //System.out.println("You defeated all the monsters in this area");
+                	View.setMessage("You defeated all the monsters in this area");
 
                     // Boss templates get marked defeated (no respawn)
                     for (Monster template : room.getMonsters()) {
@@ -333,7 +380,8 @@ public class Main {
                 monsterAttackTurn(player, enemies);
 
                 if (player.getHp() <= 0) {
-                    System.out.println("You have been slain");
+                    //System.out.println("You have been slain");
+                	View.setMessage("You have been slain");
                     inCombat = false;
                 }
 
@@ -348,7 +396,8 @@ public class Main {
 
         for (Monster m : enemies) {
             int dmg = m.getAttack();
-            System.out.println(m.getName() + " attacks you for " + dmg + " damage");
+            //System.out.println(m.getName() + " attacks you for " + dmg + " damage");
+            View.setMessage(m.getName() + " attacks you for " + dmg + " damage");
             player.takeDamage(dmg);
         }
     }
@@ -456,7 +505,8 @@ public class Main {
 
             file.close();
         } catch (Exception e) {
-            System.out.println("ERROR loading rooms: " + e.getMessage());
+            //System.out.println("ERROR loading rooms: " + e.getMessage());
+        	View.setMessage("ERROR loading rooms: " + e.getMessage());
         }
     }
 
@@ -498,7 +548,8 @@ public class Main {
 
             file.close();
         } catch (Exception e) {
-            System.out.println("ERROR loading monsters: " + e.getMessage());
+            //System.out.println("ERROR loading monsters: " + e.getMessage());
+        	View.setMessage("ERROR loading monsters: " + e.getMessage());
         }
     }
 
@@ -528,7 +579,8 @@ public class Main {
 
             file.close();
         } catch (Exception e) {
-            System.out.println("ERROR loading puzzles: " + e.getMessage());
+            //System.out.println("ERROR loading puzzles: " + e.getMessage());
+        	View.setMessage("ERROR loading puzzles: " + e.getMessage());
         }
     }
 
@@ -579,7 +631,8 @@ public class Main {
 
             file.close();
         } catch (Exception e) {
-            System.out.println("ERROR loading artifacts: " + e.getMessage());
+            //System.out.println("ERROR loading artifacts: " + e.getMessage());
+        	View.setMessage("ERROR loading artifacts: " + e.getMessage());
         }
     }
     //These blocks are so that we can get the Objects from main.
