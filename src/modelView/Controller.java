@@ -22,11 +22,6 @@ public class Controller {
 		case 1:
 			combatSet();
 			break;
-		case 2:
-			puzzleSet();
-			break;
-		case 3:
-			break;
 		default:
 			System.out.println("Error Incorrect View Called");
 		}
@@ -40,10 +35,8 @@ public class Controller {
 		String currInput = usrInput.nextLine().trim();
 		String lower = currInput.toLowerCase();
 		String verb;
-		String arg;
 		String[] parts = lower.split(" ", 2);
 		verb = parts[0];
-		arg = (parts.length > 1 ? parts[1] : null);
 		switch (verb) {
 		case "n", "north", "go n", "go north" -> {
 			m.playerMovement("N");
@@ -285,9 +278,6 @@ public class Controller {
 			break;
 		}
 		}
-	}
-	public static void puzzleSet() {
-		
 	}
 	public int getContext() {
 		return context;

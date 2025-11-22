@@ -1,5 +1,4 @@
 package modelView;
-
 //Evert Guzman
 public class View {
 	static int currView;
@@ -17,44 +16,24 @@ public class View {
 	public static void draw() {
 		switch(currView) {
 		case 0:
-			drawMainMenu();
-			return;
-		case 1:
 			drawNavigation();
 			return;
-		case 2:
+		case 1:
 			drawInventory();
 			return;
-		case 3:
+		case 2:
 			drawStats();
 			return;
-		case 4:
+		case 3:
 			drawPuzzle();
 			return;
-		case 5:
-			drawMap();
-			return;
-		case 6:
+		case 4:
 			drawCombat();
-			return;
-		case 7:
-			drawFight();
 			return;
 		default:
 			System.out.println("Invalid View has been called.");
 			return;
 		}
-	}
-	private static void drawMainMenu() {
-		System.out.println("---------Main Menu----------");
-		System.out.println("1. Start New Game [start]");
-		System.out.println("2. Load Game [load]");
-		System.out.println("3. Exit [exit]");
-		System.out.println("4. Help [help]");
-		System.out.println("------------------------------------------------------------------------------------------");
-		System.out.print("Enter Selection []: ");
-		printMessage();
-		
 	}
 	private static void drawNavigation() {
 		System.out.println("---------Navigation----------");
@@ -72,16 +51,8 @@ public class View {
 		System.out.println("---------Monsters!----------");
 		printMessage();
 	}
-	private static void drawFight() {
-		System.out.println("---------Fight!----------");
-		printMessage();
-	}
 	private static void drawPuzzle() {
 		System.out.println("---------Quiz Time----------");
-		printMessage();
-	}
-	private static void drawMap() {
-		System.out.println("---------World Map----------");
 		printMessage();
 	}
 	private static void printMessage() {
